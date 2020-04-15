@@ -5,21 +5,21 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
-with open(os.path.join("ralbot", "__about__.py")) as f:
+with open(os.path.join("peakrdl", "__about__.py")) as f:
     v_dict = {}
     exec(f.read(), v_dict)
     version = v_dict['__version__']
 
 setuptools.setup(
-    name="ralbot",
+    name="peakrdl",
     version=version,
     author="Alex Mykyta",
     author_email="amykyta3@github.com",
     description="Command-line tool for control/status register automation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/SystemRDL/RALBot",
-    packages=['ralbot'],
+    url="https://github.com/SystemRDL/PeakRDL",
+    packages=['peakrdl'],
     include_package_data=True,
     python_requires='>=3.4',
     install_requires=[
@@ -42,7 +42,7 @@ setuptools.setup(
     ),
     project_urls={
         #"Documentation": "TBD", # FIXME: Point to readthedocs page
-        "Source": "https://github.com/SystemRDL/RALBot",
-        "Tracker": "https://github.com/SystemRDL/RALBot/issues",
+        "Source": "https://github.com/SystemRDL/PeakRDL",
+        "Tracker": "https://github.com/SystemRDL/PeakRDL/issues",
     },
 )
