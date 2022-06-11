@@ -23,14 +23,16 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
             long_desc = "..."
             generates_output_file = True
 
-            def add_exporter_arguments(self, arg_group: 'argparse._ArgumentGroup') -> None:
+            def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
                 pass
 
             def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
-                pass
+                raise NotImplementedError
     """
 
     def __init__(self, name: str, exporter_plugin_cls: Any) -> None:
+        super().__init__()
+
         self.plugin = exporter_plugin_cls()
         self.name = name
         self.short_desc = getattr(self.plugin, "short_desc")
@@ -47,7 +49,7 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
         )
 
 
-    def add_exporter_arguments(self, arg_group: 'argparse._ArgumentGroup') -> None:
+    def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
         super().add_exporter_arguments(arg_group)
 
         func = getattr(self.plugin, "add_exporter_arguments", None)
@@ -59,6 +61,8 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
         func = getattr(self.plugin, "do_export", None)
         if callable(func):
             func(top_node, options)
+        else:
+            raise NotImplementedError
 
 
 
@@ -70,7 +74,7 @@ def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
         ...
         entry_points = {
             "peakrdl.exporters": [
-                'subcommand_name = module.path.to:MySubcommandClass'
+                'my_exporter_name = module.path.to:MyExporter'
             ]
         },
     )

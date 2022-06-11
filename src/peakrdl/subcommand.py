@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 import argparse
 import os
 import sys
@@ -6,6 +6,10 @@ import shlex
 import re
 
 from systemrdl import RDLCompiler
+from systemrdl.messages import FileSourceRef
+
+from .importer import Importer
+from .plugins.importer import get_importer_plugins
 
 if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
@@ -83,6 +87,9 @@ class ExporterSubcommand(Subcommand):
     #: Whether this subcommand should require the user to provide an output path
     generates_output_file = True
 
+    def __init__(self) -> None:
+        self.importers = get_importer_plugins()
+
     def add_arguments(self, parser: 'argparse.ArgumentParser') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
         compiler_arg_group.add_argument(
@@ -125,11 +132,15 @@ class ExporterSubcommand(Subcommand):
         # TODO: Add the following:
         #   - warning/error enablement?
 
+        for importer in self.importers:
+            importer_arg_group = parser.add_argument_group(f"{importer.name} importer args")
+            importer.add_importer_arguments(importer_arg_group)
+
         exporter_arg_group = parser.add_argument_group("exporter args")
         self.add_exporter_arguments(exporter_arg_group)
 
 
-    def add_exporter_arguments(self, arg_group: 'argparse._ArgumentGroup') -> None:
+    def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
         if self.generates_output_file:
             arg_group.add_argument(
                 "-o",
@@ -158,15 +169,47 @@ class ExporterSubcommand(Subcommand):
 
         # Compile/Import files
         for file in options.input_files:
-            # TODO: Load importers
             if not os.path.exists(file):
                 rdlc.msg.fatal(f"Input file does not exist: {file}")
 
-            rdlc.compile_file(
-                file,
-                incl_search_paths=options.incdirs,
-            )
+            ext = os.path.splitext(file)[1].strip(".")
+            if ext == "rdl":
+                # Is SystemRDL file
+                rdlc.compile_file(
+                    file,
+                    incl_search_paths=options.incdirs,
+                )
+            else:
+                # Is foreign input file.
 
+                # Search which importer to use by extension first
+                importer_candidates = [] # type: List[Importer]
+                for importer in self.importers:
+                    if ext in importer.file_extensions:
+                        importer_candidates.append(importer)
+
+                # Do 2nd pass if needed
+                importer = None
+                if len(importer_candidates) == 1:
+                    importer = importer_candidates[0]
+                elif len(importer_candidates) > 1:
+                    # ambiguous which importer to use
+                    # Do 2nd pass compatibility check
+                    for importer_candidate in importer_candidates:
+                        if importer_candidate.is_compatible(file):
+                            importer = importer_candidate
+                            break
+
+                if not importer:
+                    rdlc.msg.fatal(
+                        "Unknown file type. Could not find any importers capable of reading this file.",
+                        FileSourceRef(file)
+                    )
+
+                importer.do_import(rdlc, options, file)
+
+
+        # Elaborate the design
         try:
             root = rdlc.elaborate(
                 top_def_name=options.top_def_name,
@@ -178,6 +221,7 @@ class ExporterSubcommand(Subcommand):
             # TODO: Fix exception types once they become specialized in the compiler
             rdlc.msg.fatal(e.args[0])
 
+        # Run exporter
         self.do_export(root.top, options)
 
 
