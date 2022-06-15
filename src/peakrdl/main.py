@@ -6,6 +6,9 @@ from systemrdl import RDLCompileError
 
 from .__about__ import __version__
 from .plugins.exporter import get_exporter_plugins
+from .cmd.dump import Dump
+from .cmd.list_globals import ListGlobals
+
 
 if TYPE_CHECKING:
     from .subcommand import Subcommand
@@ -25,7 +28,10 @@ class SubcommandHelpFormatter(argparse.RawDescriptionHelpFormatter):
 
 def main() -> None:
     # Collect all subcommands
-    subcommands = [] # type: List[Subcommand]
+    subcommands = [
+        Dump(),
+        ListGlobals(),
+    ] # type: List[Subcommand]
     subcommands += get_exporter_plugins()
 
     # Check for duplicates
