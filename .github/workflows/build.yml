@@ -75,7 +75,7 @@ jobs:
 
       - name: Type Check
         run: |
-          mypy --config-file tests/mypy.ini src/peakrdl
+          mypy --config-file test/mypy.ini src/peakrdl
 
 #-------------------------------------------------------------------------------
   build_sdist:
