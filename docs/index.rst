@@ -14,6 +14,10 @@ This tool can:
 * Build a UVM register model abstraction layer.
 * ... or extended this tool with your own plugins
 
+.. warning::
+
+    The PeakRDL command line tool is still in pre-production (v0.x version numbers).
+    During this time, I may decide to refactor things which could break compatibility.
 
 
 Installing
