@@ -48,7 +48,7 @@ Create a UVM Register Model
 
 Input: `atxmega_spi.rdl <https://github.com/SystemRDL/PeakRDL/tree/main/examples/atxmega_spi.rdl>`_
 
-Result: `atxmega_uvm_pkg.sv <https://github.com/SystemRDL/PeakRDL/blob/main/examples/atxmega_uvm_pkg.sv>`_
+Result: `atxmega_uvm_pkg.sv <https://github.com/SystemRDL/PeakRDL/blob/main/examples/atxmega_spi_uvm_pkg.sv>`_
 
 
 Convert to IP-XACT XML
