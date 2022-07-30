@@ -27,17 +27,21 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        # FIXME: Add dependencies
+        "systemrdl-compiler >= 1.23.0",
+        "peakrdl-regblock >= 0.6.0",
+        "peakrdl-html >= 2.7.0",
+        "peakrdl-uvm >= 2.2.0",
+        "peakrdl-ipxact >= 3.2.0",
     ],
     classifiers=(
-        "Development Status :: 1 - Planning", # FIXME: move to production when ready
+        "Development Status :: 4 - Beta",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -45,7 +49,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
     ),
     project_urls={
-        #"Documentation": "TBD", # FIXME: Point to readthedocs page
+        "Documentation": "https://peakrdl.readthedocs.io",
         "Source": "https://github.com/SystemRDL/PeakRDL",
         "Tracker": "https://github.com/SystemRDL/PeakRDL/issues",
     },
