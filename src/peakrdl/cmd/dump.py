@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 import math
 
-from ..subcommand import ExporterSubcommand
+from systemrdl import RDLListener, RDLWalker
+from systemrdl.node import AddrmapNode, RegNode
 
-from systemrdl import RDLListener, RDLWalker, WalkerAction
-from systemrdl.node import AddrmapNode, AddressableNode, RegNode
+from ..subcommand import ExporterSubcommand
 
 if TYPE_CHECKING:
     import argparse
@@ -15,7 +15,7 @@ class DumpListener(RDLListener):
         self.hex_digits = hex_digits
         self.unroll = unroll
 
-    def enter_Reg(self, node: RegNode) -> Optional[WalkerAction]:
+    def enter_Reg(self, node: RegNode) -> None:
         if self.unroll:
             addr = node.absolute_address
             size = node.size
@@ -34,7 +34,7 @@ class Dump(ExporterSubcommand):
     short_desc = "print register model contents to stdout"
     generates_output_file = False
 
-    def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
+    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         super().add_exporter_arguments(arg_group)
 
         arg_group.add_argument(
@@ -45,7 +45,7 @@ class Dump(ExporterSubcommand):
         )
 
 
-    def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
+    def do_export(self, top_node: AddrmapNode, options: 'argparse.Namespace') -> None:
         hex_digits = math.ceil(top_node.total_size.bit_length() / 4)
         walker = RDLWalker(unroll=options.unroll)
         listener = DumpListener(hex_digits, options.unroll)

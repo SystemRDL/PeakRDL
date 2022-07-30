@@ -1,0 +1,3 @@
+*.rpt
+htmlcov/
+*.xml

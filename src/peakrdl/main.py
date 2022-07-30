@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Dict
 
 from systemrdl import RDLCompileError
 
@@ -14,12 +14,19 @@ if TYPE_CHECKING:
     from .subcommand import Subcommand
 
 
-# TODO: Change this
-DESCRIPTION = "Main Description"
+DESCRIPTION = """
+PeakRDL is a control & status register model automation toolchain.
+
+For help about a specific subcommand, try:
+    peakrdl <command> --help
+
+For more documentation, visit https://peakrdl.readthedocs.io
+
+"""
 
 
 class SubcommandHelpFormatter(argparse.RawDescriptionHelpFormatter):
-    def _format_action(self, action):
+    def _format_action(self, action): # type: ignore
         parts = super(argparse.RawDescriptionHelpFormatter, self)._format_action(action)
         if action.nargs == argparse.PARSER:
             parts = "\n".join(parts.split("\n")[1:])
@@ -35,7 +42,7 @@ def main() -> None:
     subcommands += get_exporter_plugins()
 
     # Check for duplicates
-    sc_dict = {}
+    sc_dict = {} # type: Dict[str, Subcommand]
     for sc in subcommands:
         if sc.name in sc_dict:
             raise RuntimeError(f"More than one exporter plugin was registered with the same name '{sc.name}': \n\t{sc_dict[sc.name]}\n\t{sc}")

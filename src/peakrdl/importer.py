@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class Importer:
     #: Importer name
 
-    name = None
+    name = None # type: str
 
     #: List of possible file extensions.
     #: This is used as the first pass to determine if the input file shall use
@@ -28,9 +28,9 @@ class Importer:
         raise NotImplementedError
 
 
-    def add_importer_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
+    def add_importer_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         pass
 
 
-    def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str):
+    def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str) -> None:
         raise NotImplementedError

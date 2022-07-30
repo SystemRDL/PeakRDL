@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Optional
 import argparse
 import os
 import sys
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class LoadArgsFromFile (argparse.Action):
-    def __call__ (self, parser, namespace, values, option_string = None):
+    def __call__ (self, parser, namespace, values, option_string = None): # type: ignore
         argfile = values
 
         if not os.path.exists(argfile):
@@ -35,14 +35,14 @@ class Subcommand:
     """
 
     #: Subcommand name
-    name = None
+    name = None # type: str
 
     #: Short-form description
-    short_desc = None
+    short_desc = None # type: str
 
     #: Longer-form description
     #: If left as None, inherits short_desc
-    long_desc = None
+    long_desc = None # type: Optional[str]
 
 
     def _init_subparser(self, subgroup: 'argparse._SubParsersAction') -> None:
@@ -64,7 +64,7 @@ class Subcommand:
         )
 
 
-    def add_arguments(self, parser: 'argparse.ArgumentParser') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
         pass
 
 
@@ -89,7 +89,7 @@ class ExporterSubcommand(Subcommand):
     def __init__(self) -> None:
         self.importers = get_importer_plugins()
 
-    def add_arguments(self, parser: 'argparse.ArgumentParser') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
         process_input.add_rdl_compile_arguments(compiler_arg_group)
         process_input.add_elaborate_arguments(compiler_arg_group)
@@ -100,7 +100,7 @@ class ExporterSubcommand(Subcommand):
         self.add_exporter_arguments(exporter_arg_group)
 
 
-    def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
+    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         if self.generates_output_file:
             arg_group.add_argument(
                 "-o",

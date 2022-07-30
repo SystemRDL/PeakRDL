@@ -49,7 +49,7 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
         )
 
 
-    def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
+    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         super().add_exporter_arguments(arg_group)
 
         func = getattr(self.plugin, "add_exporter_arguments", None)
@@ -79,9 +79,6 @@ def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
         },
     )
     """
-    # TODO: Also provide an env-variable based method in case users don't want
-    # to create a package installer?
-
     eps = metadata.entry_points().select(group='peakrdl.exporters')
 
     exporters = []

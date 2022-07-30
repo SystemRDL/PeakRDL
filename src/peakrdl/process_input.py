@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from .importer import Importer
 
 
-def add_rdl_compile_arguments(parser: 'argparse.ArgumentParser') -> None:
+def add_rdl_compile_arguments(parser: 'argparse._ActionsContainer') -> None:
     parser.add_argument(
         "input_files",
         metavar="FILE",
@@ -26,13 +26,13 @@ def add_rdl_compile_arguments(parser: 'argparse.ArgumentParser') -> None:
     )
 
 
-def add_importer_arguments(parser: 'argparse.ArgumentParser', importers: 'List[Importer]') -> None:
+def add_importer_arguments(parser: 'argparse._ActionsContainer', importers: 'List[Importer]') -> None:
     for importer in importers:
         importer_arg_group = parser.add_argument_group(f"{importer.name} importer args")
         importer.add_importer_arguments(importer_arg_group)
 
 
-def add_elaborate_arguments(parser: 'argparse.ArgumentParser') -> None:
+def add_elaborate_arguments(parser: 'argparse._ActionsContainer') -> None:
     parser.add_argument(
         "-t", "--top",
         dest="top_def_name",

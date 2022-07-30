@@ -17,7 +17,7 @@ class ListGlobals(Subcommand):
     def __init__(self) -> None:
         self.importers = get_importer_plugins()
 
-    def add_arguments(self, parser: 'argparse.ArgumentParser') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
         process_input.add_rdl_compile_arguments(compiler_arg_group)
 

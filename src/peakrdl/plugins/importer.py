@@ -1,11 +1,13 @@
 from typing import TYPE_CHECKING, Any, List
 from importlib import metadata
 
+from ..importer import Importer
+
 if TYPE_CHECKING:
     import argparse
     from systemrdl import RDLCompiler
 
-class ImporterPluginWrapper:
+class ImporterPluginWrapper(Importer):
     """
     Importers external to this package can register an implementation that can
     be loaded into PeakRDL
@@ -44,18 +46,18 @@ class ImporterPluginWrapper:
     def is_compatible(self, path: str) -> bool:
         func = getattr(self.plugin, "is_compatible", None)
         if callable(func):
-            func(path)
+            return func(path)
         else:
             raise NotImplementedError
 
 
-    def add_importer_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
+    def add_importer_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         func = getattr(self.plugin, "add_importer_arguments", None)
         if callable(func):
             func(arg_group)
 
 
-    def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str):
+    def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str) -> None:
         func = getattr(self.plugin, "do_import", None)
         if callable(func):
             func(rdlc, options, path)
@@ -64,7 +66,7 @@ class ImporterPluginWrapper:
 
 
 
-def get_importer_plugins() -> List[ImporterPluginWrapper]:
+def get_importer_plugins() -> List[Importer]:
     """
     Load any plugins that advertise themselves in their setup.py via the following:
 
@@ -77,9 +79,6 @@ def get_importer_plugins() -> List[ImporterPluginWrapper]:
         },
     )
     """
-    # TODO: Also provide an env-variable based method in case users don't want
-    # to create a package installer?
-
     eps = metadata.entry_points().select(group='peakrdl.importers')
 
     importers = []
@@ -87,4 +86,4 @@ def get_importer_plugins() -> List[ImporterPluginWrapper]:
         importer = ImporterPluginWrapper(ep.name, ep.load())
         importers.append(importer)
 
-    return importers
+    return importers # type: ignore
