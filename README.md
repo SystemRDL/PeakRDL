@@ -5,7 +5,7 @@
 # PeakRDL
 
 PeakRDL is a free and open-source control & status register (CSR) toolchain.
-This projects provides a command-line tool that unifies many aspects of register
+This project provides a command-line tool that unifies many aspects of register
 automation centered around the SystemRDL register description language.
 
 ## Documentation

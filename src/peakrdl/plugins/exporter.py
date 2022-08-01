@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any, List
-from importlib import metadata
 
+from .import entry_points
 from ..subcommand import ExporterSubcommand
 
 if TYPE_CHECKING:
@@ -79,10 +79,8 @@ def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
         },
     )
     """
-    eps = metadata.entry_points().select(group='peakrdl.exporters')
-
     exporters = []
-    for ep in eps:
+    for ep in entry_points.get_entry_points("peakrdl.exporters"): # type: ignore
         exporter = ExporterSubcommandPluginWrapper(ep.name, ep.load())
         exporters.append(exporter)
 
