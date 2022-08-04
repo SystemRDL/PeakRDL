@@ -59,13 +59,16 @@ def main() -> None:
     subgroup = parser.add_subparsers(
         title="subcommands",
         metavar="<subcommand>",
-        required=True
     )
     for subcommand in subcommands:
         subcommand._init_subparser(subgroup)
 
     # Execute!
     options = parser.parse_args()
+    if not hasattr(options, 'subcommand'):
+        parser.print_usage()
+        print(f"{parser.prog}: error the following arguments are required: <subcommand>")
+        sys.exit(1)
     try:
         options.subcommand.main(options)
     except RDLCompileError:
