@@ -24,11 +24,7 @@ cd $this_dir/../
 $python -m pip install .
 cd $this_dir
 
-# Run unit tests while collecting coverage
-#$pytest --cov=peakrdl_ipxact
-
-# Generate coverage report
-#$coverage html -d $this_dir/htmlcov
+./testcases.sh
 
 # Run lint
 $pylint --rcfile $this_dir/pylint.rc ../src/peakrdl | tee $this_dir/lint.rpt
