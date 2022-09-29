@@ -5,6 +5,7 @@ from ..subcommand import ExporterSubcommand
 
 if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
+    from systemrdl.udp import UDPDefinition
     import argparse
 
 
@@ -22,6 +23,7 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
             short_desc = "..."
             long_desc = "..."
             generates_output_file = True
+            udp_definitions = []
 
             def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
                 pass
@@ -38,6 +40,7 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
         self.short_desc = getattr(self.plugin, "short_desc")
         self.long_desc = getattr(self.plugin, "long_desc", None)
         self.generates_output_file = getattr(self.plugin, "generates_output_file", True)
+        self.udp_definitions = getattr(self.plugin, "udp_definitions", [])
 
 
     def __repr__(self) -> str:

@@ -27,7 +27,7 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        "systemrdl-compiler >= 1.23.0",
+        "systemrdl-compiler >= 1.25.0",
         "peakrdl-regblock >= 0.6.0",
         "peakrdl-html >= 2.7.0",
         "peakrdl-uvm >= 2.2.0",

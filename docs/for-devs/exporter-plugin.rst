@@ -55,6 +55,12 @@ Members of this descriptor class are as follows:
 
     Set this to ``False`` if your exporter does not write any output files.
 
+.. data:: udp_definitions
+
+    (optional) List of ``systemrdl.udp.UDPDefinition`` classes that this subcommand
+    provides. Internally, each of these definitions are registered with the
+    compiler as soft UDPs via ``RDLCompiler.register_udp()``
+
 
 .. function:: add_exporter_arguments(self, arg_group)
 

@@ -12,8 +12,8 @@ class ImporterPluginWrapper(Importer):
     Importers external to this package can register an implementation that can
     be loaded into PeakRDL
 
-    The imporer definition is provided by a class that mimics the
-    members/methods of Importer without actually extending it
+    The importer definition is provided by a class that mimics the
+    members/methods of the Importer class without actually extending it
 
     .. code:: python
 

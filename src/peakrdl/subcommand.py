@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, List, Type
 import argparse
 import os
 import sys
@@ -12,6 +12,7 @@ from . import process_input
 
 if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
+    from systemrdl.udp import UDPDefinition
 
 
 class LoadArgsFromFile (argparse.Action):
@@ -86,6 +87,9 @@ class ExporterSubcommand(Subcommand):
     #: Whether this subcommand should require the user to provide an output path
     generates_output_file = True
 
+    #: List of User Defined Property definitions that this subcommand provides
+    udp_definitions = [] # type: List[Type[UDPDefinition]]
+
     def __init__(self) -> None:
         self.importers = get_importer_plugins()
 
@@ -112,6 +116,9 @@ class ExporterSubcommand(Subcommand):
 
     def main(self, options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()
+
+        for udp in self.udp_definitions:
+            rdlc.register_udp(udp)
 
         parameters = process_input.parse_parameters(rdlc, options.parameters)
 

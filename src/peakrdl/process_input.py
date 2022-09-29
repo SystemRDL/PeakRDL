@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING, List, Dict, Any
 import re
 import os
 
-from systemrdl import RDLCompiler, AddrmapNode
 from systemrdl.messages import FileSourceRef
 
 if TYPE_CHECKING:
     import argparse
+    from systemrdl import RDLCompiler, AddrmapNode
     from .importer import Importer
 
 
@@ -58,7 +58,7 @@ def add_elaborate_arguments(parser: 'argparse._ActionsContainer') -> None:
     )
 
 
-def parse_parameters(rdlc: RDLCompiler, parameter_options: List[str]) -> Dict[str, Any]:
+def parse_parameters(rdlc: 'RDLCompiler', parameter_options: List[str]) -> Dict[str, Any]:
     parameters = {}
     for raw_param in parameter_options:
         m = re.fullmatch(r"(\w+)=(.+)", raw_param)
@@ -75,7 +75,7 @@ def parse_parameters(rdlc: RDLCompiler, parameter_options: List[str]) -> Dict[st
     return parameters
 
 
-def process_input(rdlc: RDLCompiler, importers: 'List[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
+def process_input(rdlc: 'RDLCompiler', importers: 'List[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
     for file in input_files:
         if not os.path.exists(file):
             rdlc.msg.fatal(f"Input file does not exist: {file}")
@@ -117,7 +117,7 @@ def process_input(rdlc: RDLCompiler, importers: 'List[Importer]', input_files: L
             importer.do_import(rdlc, options, file)
 
 
-def elaborate(rdlc: RDLCompiler, parameters: Dict[str, Any], options: 'argparse.Namespace') -> AddrmapNode:
+def elaborate(rdlc: 'RDLCompiler', parameters: Dict[str, Any], options: 'argparse.Namespace') -> 'AddrmapNode':
     try:
         root = rdlc.elaborate(
             top_def_name=options.top_def_name,

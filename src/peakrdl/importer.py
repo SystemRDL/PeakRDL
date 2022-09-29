@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 class Importer:
     #: Importer name
-
     name = None # type: str
 
     #: List of possible file extensions.
