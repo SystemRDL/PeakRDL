@@ -1,0 +1,52 @@
+Licensing
+=========
+
+Re-distribution of the PeakRDL command line interface tool shall adhere to the
+terms outlined by the GNU GPL v3 license. For a copy of the license, see:
+https://github.com/SystemRDL/PeakRDL/blob/main/LICENSE
+
+
+Why GPL?
+--------
+GPL was chosen because my intent is to promote a thriving ecosystem of free and
+open source register automation tools. GPL discourages this tool to be bundled
+into some commercially sold closed-source software, as that would be contrary to
+this project's philosophy.
+
+
+What is covered by the GPL v3 license?
+--------------------------------------
+The GPL license is intended for the command line tool itself. This includes all
+Python sources and testcase infrastructure not explicitly mentioned in the
+exemptions below.
+
+Many of the PeakRDL sub-commands are implemented as separate plugins which are
+licensed individually.
+
+
+What is exempt from the GPL v3 license?
+---------------------------------------
+Don't worry. Not everything that the PeakRDL project touches is considered
+GPL v3 code.
+
+The following are exempt and are free to use with no restrictions:
+
+*   Any code snippets in this documentation can be freely copy/pasted. These are
+    examples that are intended for this purpose.
+*   All example files available in the `examples folder in the repository <https://github.com/SystemRDL/PeakRDL/tree/main/examples>`_
+
+
+How are plugins licensed?
+-------------------------
+Every PeakRDL plugin is licensed separately. If you write your own plugin, you
+can use any license you would like. Of course I would encourage you to use
+GPL v3 as well!
+
+
+Can I use this as part of my company's internally developed tools?
+------------------------------------------------------------------
+Absolutely!
+
+Sometimes it may be necessary to integrate this into a larger toolchain at your
+workplace. This is totally OK, as long as you don't start distributing it
+outside your workplace in ways that violate the GPL v3 license.
