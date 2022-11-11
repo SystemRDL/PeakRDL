@@ -5,7 +5,6 @@ from ..subcommand import ExporterSubcommand
 
 if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
-    from systemrdl.udp import UDPDefinition
     import argparse
 
 
@@ -32,11 +31,13 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
                 raise NotImplementedError
     """
 
-    def __init__(self, name: str, exporter_plugin_cls: Any) -> None:
+    def __init__(self, name: str, exporter_plugin_cls: Any, dist_name: str, dist_version: str) -> None:
         super().__init__()
 
         self.plugin = exporter_plugin_cls()
         self.name = name
+        self.dist_name = dist_name
+        self.dist_version = dist_version
         self.short_desc = getattr(self.plugin, "short_desc")
         self.long_desc = getattr(self.plugin, "long_desc", None)
         self.generates_output_file = getattr(self.plugin, "generates_output_file", True)
@@ -83,8 +84,11 @@ def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
     )
     """
     exporters = []
-    for ep in entry_points.get_entry_points("peakrdl.exporters"): # type: ignore
-        exporter = ExporterSubcommandPluginWrapper(ep.name, ep.load())
+    for ep, dist in entry_points.get_entry_points("peakrdl.exporters"):
+        exporter = ExporterSubcommandPluginWrapper(
+            ep.name, ep.load(),
+            entry_points.get_name_from_dist(dist), dist.version
+        )
         exporters.append(exporter)
 
     return exporters

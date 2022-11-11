@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from systemrdl.udp import UDPDefinition
 
 
-class LoadArgsFromFile (argparse.Action):
+class LoadArgsFromFile(argparse.Action):
     def __call__ (self, parser, namespace, values, option_string = None): # type: ignore
         argfile = values
 

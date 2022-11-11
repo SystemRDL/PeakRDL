@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any, List
 
-from . import entry_points
+from .entry_points import get_entry_points, get_name_from_dist
 from ..importer import Importer
 
 if TYPE_CHECKING:
@@ -30,9 +30,11 @@ class ImporterPluginWrapper(Importer):
                 raise NotImplementedError
     """
 
-    def __init__(self, name: str, importer_plugin_cls: Any) -> None:
+    def __init__(self, name: str, importer_plugin_cls: Any, dist_name: str, dist_version: str) -> None:
         self.plugin = importer_plugin_cls()
         self.name = name
+        self.dist_name = dist_name
+        self.dist_version = dist_version
         self.file_extensions = getattr(self.plugin, "file_extensions", [])
 
     def __repr__(self) -> str:
@@ -66,7 +68,7 @@ class ImporterPluginWrapper(Importer):
 
 
 
-def get_importer_plugins() -> List[Importer]:
+def get_importer_plugins() -> List[ImporterPluginWrapper]:
     """
     Load any plugins that advertise themselves in their setup.py via the following:
 
@@ -80,8 +82,11 @@ def get_importer_plugins() -> List[Importer]:
     )
     """
     importers = []
-    for ep in entry_points.get_entry_points("peakrdl.importers"): # type: ignore
-        importer = ImporterPluginWrapper(ep.name, ep.load())
+    for ep, dist in get_entry_points("peakrdl.importers"):
+        importer = ImporterPluginWrapper(
+            ep.name, ep.load(),
+            get_name_from_dist(dist), dist.version
+        )
         importers.append(importer)
 
-    return importers # type: ignore
+    return importers

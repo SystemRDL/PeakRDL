@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Dict, Any
+from typing import TYPE_CHECKING, List, Sequence, Dict, Any
 import re
 import os
 
@@ -26,7 +26,7 @@ def add_rdl_compile_arguments(parser: 'argparse._ActionsContainer') -> None:
     )
 
 
-def add_importer_arguments(parser: 'argparse._ActionsContainer', importers: 'List[Importer]') -> None:
+def add_importer_arguments(parser: 'argparse._ActionsContainer', importers: 'Sequence[Importer]') -> None:
     for importer in importers:
         importer_arg_group = parser.add_argument_group(f"{importer.name} importer args")
         importer.add_importer_arguments(importer_arg_group)
@@ -75,7 +75,7 @@ def parse_parameters(rdlc: 'RDLCompiler', parameter_options: List[str]) -> Dict[
     return parameters
 
 
-def process_input(rdlc: 'RDLCompiler', importers: 'List[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
+def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
     for file in input_files:
         if not os.path.exists(file):
             rdlc.msg.fatal(f"Input file does not exist: {file}")
