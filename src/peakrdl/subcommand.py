@@ -14,22 +14,6 @@ if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
     from systemrdl.udp import UDPDefinition
 
-
-class LoadArgsFromFile(argparse.Action):
-    def __call__ (self, parser, namespace, values, option_string = None): # type: ignore
-        argfile = values
-
-        if not os.path.exists(argfile):
-            print(f"file not found: {argfile}", file=sys.stderr)
-            sys.exit(1)
-
-        with open(argfile, "r", encoding='utf-8') as f:
-            parser.parse_args(
-                shlex.split(f.read(), comments=True),
-                namespace
-            )
-
-
 class Subcommand:
     """
     Base command line interface subcommand class
@@ -57,10 +41,11 @@ class Subcommand:
         self.add_arguments(subparser)
         subparser.set_defaults(subcommand=self)
 
+        # Add
         subparser.add_argument(
             '-f',
-            metavar="FILENAME",
-            action=LoadArgsFromFile,
+            metavar="FILE",
+            dest="argfile",
             help="Specify a file containing more command line arguments"
         )
 
