@@ -1,8 +1,5 @@
 from typing import TYPE_CHECKING, Optional, List, Type
 import argparse
-import os
-import sys
-import shlex
 
 from systemrdl import RDLCompiler
 
