@@ -82,7 +82,7 @@ SystemRDL 2.0
 SystemRDL is the primary register model source format for PeakRDL.
 
 For a full description of the register description language standard, see
-`Accelera's SystemRDL 2.0 specification <http://accellera.org/downloads/standards/systemrdl>`_.
+`Accellera's SystemRDL 2.0 specification <http://accellera.org/downloads/standards/systemrdl>`_.
 
 Internally, PeakRDL uses the `systemrdl-compiler <https://systemrdl-compiler.readthedocs.io>`_ package
 to interpret and elaborate RDL input.
@@ -94,7 +94,7 @@ IP-XACT XML
 PeakRDL is capable of importing IP-XACT XML files. These are converted into SystemRDL semantics by the importer.
 For more details on how the importer works, see the `PeakRDL-ipxact documentation <https://peakrdl-ipxact.readthedocs.io/en/latest/importer.html>`_.
 
-For more details on the IP-XACT format, see `Accelera's standards page <https://www.accellera.org/downloads/standards/ip-xact>`_
+For more details on the IP-XACT format, see `Accellera's standards page <https://www.accellera.org/downloads/standards/ip-xact>`_
 
 
 
