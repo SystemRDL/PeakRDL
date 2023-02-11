@@ -1,11 +1,9 @@
 from typing import TYPE_CHECKING
 
 from systemrdl import RDLCompiler
-from systemrdl.component import Addrmap
 
 from ..subcommand import Subcommand
 from ..plugins.importer import get_importer_plugins
-from .. import process_input
 
 if TYPE_CHECKING:
     import argparse
