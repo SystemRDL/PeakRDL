@@ -1,7 +1,5 @@
 
-addrmap atxmega_spi #(
-    bit x=1
-){
+addrmap atxmega_spi {
     name = "ATXMEGA SPI controller";
     desc = "Register description of Atmel XMEGA AU's SPI controller
     Transcribed from original manual as an example exercise:

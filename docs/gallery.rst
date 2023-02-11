@@ -63,6 +63,18 @@ Result: `atxmega_spi.xml <https://github.com/SystemRDL/PeakRDL/blob/main/example
 For more details, see the full `PeakRDL-ipxact documentation <https://peakrdl-ipxact.readthedocs.io/en/latest/exporter.html>`_.
 
 
+Convert other formats to SystemRDL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    # Convert IP-XACT to SystemRDL
+    peakrdl systemrdl atxmega_spi.xml -o atxmega_spi.rdl
+
+
+Provided by `PeakRDL-systemrdl <https://github.com/SystemRDL/PeakRDL-systemrdl>`_.
+
+
 Run your own custom command
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
