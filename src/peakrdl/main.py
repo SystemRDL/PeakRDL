@@ -11,6 +11,7 @@ from .plugins.exporter import get_exporter_plugins
 from .plugins.importer import get_importer_plugins
 from .cmd.dump import Dump
 from .cmd.list_globals import ListGlobals
+from .cmd.preprocess import Preprocess
 
 
 if TYPE_CHECKING:
@@ -91,6 +92,7 @@ def main() -> None:
     subcommands = [
         Dump(),
         ListGlobals(),
+        Preprocess(),
     ] # type: List[Subcommand]
     subcommands += get_exporter_plugins()
 
