@@ -35,7 +35,6 @@ class Dump(ExporterSubcommand):
     generates_output_file = False
 
     def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
-        super().add_exporter_arguments(arg_group)
 
         arg_group.add_argument(
             "-u", "--unroll",

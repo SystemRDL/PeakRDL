@@ -83,18 +83,17 @@ class ExporterSubcommand(Subcommand):
         process_input.add_importer_arguments(parser, self.importers)
 
         exporter_arg_group = parser.add_argument_group("exporter args")
-        self.add_exporter_arguments(exporter_arg_group)
-
-
-    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         if self.generates_output_file:
-            arg_group.add_argument(
+            exporter_arg_group.add_argument(
                 "-o",
                 dest="output",
                 required=True,
                 help="Output path",
             )
+        self.add_exporter_arguments(exporter_arg_group)
 
+    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
+        pass
 
     def main(self, options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()

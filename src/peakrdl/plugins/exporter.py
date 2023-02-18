@@ -1,24 +1,18 @@
-from typing import TYPE_CHECKING, Any, List
+from typing import List
 
-from .import entry_points
+from .entry_points import get_entry_points, get_name_from_dist
 from ..subcommand import ExporterSubcommand
 
-if TYPE_CHECKING:
-    from systemrdl.node import AddrmapNode
-    import argparse
-
-
-class ExporterSubcommandPluginWrapper(ExporterSubcommand):
+class ExporterSubcommandPlugin(ExporterSubcommand):
     """
     Exporters external to this package can register a subcommand implementation
     that can be loaded into PeakRDL's subcommand list.
 
-    The subcommand definition is provided by a class that mimics the
-    members/methods of ExporterSubcommand without actually extending it
+    The subcommand definition is provided by a class extended from this class.
 
     .. code:: python
 
-        class MyExporter:
+        class MyExporter(ExporterSubcommandPlugin):
             short_desc = "..."
             long_desc = "..."
             generates_output_file = True
@@ -30,47 +24,13 @@ class ExporterSubcommandPluginWrapper(ExporterSubcommand):
             def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
                 raise NotImplementedError
     """
-
-    def __init__(self, name: str, exporter_plugin_cls: Any, dist_name: str, dist_version: str) -> None:
+    def __init__(self, dist_name: str, dist_version: str) -> None:
         super().__init__()
-
-        self.plugin = exporter_plugin_cls()
-        self.name = name
         self.dist_name = dist_name
         self.dist_version = dist_version
-        self.short_desc = getattr(self.plugin, "short_desc")
-        self.long_desc = getattr(self.plugin, "long_desc", None)
-        self.generates_output_file = getattr(self.plugin, "generates_output_file", True)
-        self.udp_definitions = getattr(self.plugin, "udp_definitions", [])
 
 
-    def __repr__(self) -> str:
-        return "<%s '%s' from %s at 0x%x>" % (
-            self.__class__.__qualname__,
-            self.name,
-            self.plugin.__class__,
-            id(self)
-        )
-
-
-    def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
-        super().add_exporter_arguments(arg_group)
-
-        func = getattr(self.plugin, "add_exporter_arguments", None)
-        if callable(func):
-            func(arg_group)
-
-
-    def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
-        func = getattr(self.plugin, "do_export", None)
-        if callable(func):
-            func(top_node, options)
-        else:
-            raise NotImplementedError
-
-
-
-def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
+def get_exporter_plugins() -> List[ExporterSubcommandPlugin]:
     """
     Load any plugins that advertise themselves in their setup.py via the following:
 
@@ -84,11 +44,17 @@ def get_exporter_plugins() -> List[ExporterSubcommandPluginWrapper]:
     )
     """
     exporters = []
-    for ep, dist in entry_points.get_entry_points("peakrdl.exporters"):
-        exporter = ExporterSubcommandPluginWrapper(
-            ep.name, ep.load(),
-            entry_points.get_name_from_dist(dist), dist.version
-        )
+    for ep, dist in get_entry_points("peakrdl.exporters"):
+        cls = ep.load()
+        dist_name = get_name_from_dist(dist)
+
+        if issubclass(cls, ExporterSubcommandPlugin):
+            # New-style plugin
+            # Override name - always use entry point's name
+            cls.name = ep.name
+            exporter = cls(dist_name, dist.version)
+        else:
+            raise RuntimeError(f"Exporter class {cls} is expected to be extended from peakrdl.plugins.exporter.ExporterSubcommandPlugin")
         exporters.append(exporter)
 
     return exporters

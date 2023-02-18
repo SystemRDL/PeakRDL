@@ -1,23 +1,18 @@
-from typing import TYPE_CHECKING, Any, List
+from typing import List
 
 from .entry_points import get_entry_points, get_name_from_dist
 from ..importer import Importer
 
-if TYPE_CHECKING:
-    import argparse
-    from systemrdl import RDLCompiler
-
-class ImporterPluginWrapper(Importer):
+class ImporterPlugin(Importer):
     """
     Importers external to this package can register an implementation that can
     be loaded into PeakRDL
 
-    The importer definition is provided by a class that mimics the
-    members/methods of the Importer class without actually extending it
+    The importer definition is provided by a class extended from this class.
 
     .. code:: python
 
-        class MyImporter:
+        class MyImporter(ImporterPlugin):
             file_extensions = ["foo"]
 
             def is_compatible(self, path: str) -> bool:
@@ -29,46 +24,13 @@ class ImporterPluginWrapper(Importer):
             def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str):
                 raise NotImplementedError
     """
-
-    def __init__(self, name: str, importer_plugin_cls: Any, dist_name: str, dist_version: str) -> None:
-        self.plugin = importer_plugin_cls()
-        self.name = name
+    def __init__(self, dist_name: str, dist_version: str) -> None:
+        super().__init__()
         self.dist_name = dist_name
         self.dist_version = dist_version
-        self.file_extensions = getattr(self.plugin, "file_extensions", [])
-
-    def __repr__(self) -> str:
-        return "<%s '%s' from %s at 0x%x>" % (
-            self.__class__.__qualname__,
-            self.name,
-            self.plugin.__class__,
-            id(self)
-        )
-
-    def is_compatible(self, path: str) -> bool:
-        func = getattr(self.plugin, "is_compatible", None)
-        if callable(func):
-            return func(path)
-        else:
-            raise NotImplementedError
 
 
-    def add_importer_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
-        func = getattr(self.plugin, "add_importer_arguments", None)
-        if callable(func):
-            func(arg_group)
-
-
-    def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str) -> None:
-        func = getattr(self.plugin, "do_import", None)
-        if callable(func):
-            func(rdlc, options, path)
-        else:
-            raise NotImplementedError
-
-
-
-def get_importer_plugins() -> List[ImporterPluginWrapper]:
+def get_importer_plugins() -> List[ImporterPlugin]:
     """
     Load any plugins that advertise themselves in their setup.py via the following:
 
@@ -83,10 +45,16 @@ def get_importer_plugins() -> List[ImporterPluginWrapper]:
     """
     importers = []
     for ep, dist in get_entry_points("peakrdl.importers"):
-        importer = ImporterPluginWrapper(
-            ep.name, ep.load(),
-            get_name_from_dist(dist), dist.version
-        )
+        cls = ep.load()
+        dist_name = get_name_from_dist(dist)
+
+        if issubclass(cls, ImporterPlugin):
+            # New-style plugin
+            # Override name - always use entry point's name
+            cls.name = ep.name
+            importer = cls(dist_name, dist.version)
+        else:
+            raise RuntimeError(f"Importer class {cls} is expected to be extended from peakrdl.plugins.importer.ImporterPlugin")
         importers.append(importer)
 
     return importers
