@@ -88,6 +88,9 @@ def expand_file_args(argv: List[str], _pathlist: Optional[Set[str]] = None) -> L
 
 
 def main() -> None:
+    # Collect all importers
+    importers = get_importer_plugins()
+
     # Collect all subcommands
     subcommands = [
         Dump(),
@@ -96,7 +99,7 @@ def main() -> None:
     ] # type: List[Subcommand]
     subcommands += get_exporter_plugins()
 
-    # Check for duplicates
+    # Check for duplicate subcommands
     sc_dict = {} # type: Dict[str, Subcommand]
     for sc in subcommands:
         if sc.name in sc_dict:
@@ -122,14 +125,16 @@ def main() -> None:
     for subcommand in subcommands:
         subcommand._init_subparser(subgroup)
 
-    # Execute!
+    # Process command-line args
     argv = expand_file_args(sys.argv[1:])
     options = parser.parse_args(argv)
     if not hasattr(options, 'subcommand'):
         parser.print_usage()
         print(f"{parser.prog}: error the following arguments are required: <subcommand>")
         sys.exit(1)
+
+    # Run subcommand!
     try:
-        options.subcommand.main(options)
+        options.subcommand.main(importers, options)
     except RDLCompileError:
         sys.exit(1)

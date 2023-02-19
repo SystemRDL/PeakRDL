@@ -3,13 +3,13 @@ import argparse
 
 from systemrdl import RDLCompiler
 
-from .plugins.importer import get_importer_plugins
 
 from . import process_input
 
 if TYPE_CHECKING:
     from systemrdl.node import AddrmapNode
     from systemrdl.udp import UDPDefinition
+    from .plugins.importer import ImporterPlugin
 
 class Subcommand:
     """
@@ -51,7 +51,7 @@ class Subcommand:
         pass
 
 
-    def main(self, options: 'argparse.Namespace') -> None:
+    def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
         raise NotImplementedError
 
 
@@ -71,9 +71,6 @@ class ExporterSubcommand(Subcommand):
 
     #: List of User Defined Property definitions that this subcommand provides
     udp_definitions = [] # type: List[Type[UDPDefinition]]
-
-    def __init__(self) -> None:
-        self.importers = get_importer_plugins()
 
     def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
@@ -95,7 +92,7 @@ class ExporterSubcommand(Subcommand):
     def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
         pass
 
-    def main(self, options: 'argparse.Namespace') -> None:
+    def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()
 
         for udp in self.udp_definitions:
@@ -103,7 +100,7 @@ class ExporterSubcommand(Subcommand):
 
         parameters = process_input.parse_parameters(rdlc, options.parameters)
 
-        process_input.process_input(rdlc, self.importers, options.input_files, options)
+        process_input.process_input(rdlc, importers, options.input_files, options)
 
         top = process_input.elaborate(rdlc, parameters, options)
 

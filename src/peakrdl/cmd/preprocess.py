@@ -1,19 +1,16 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from systemrdl import RDLCompiler
 
 from ..subcommand import Subcommand
-from ..plugins.importer import get_importer_plugins
 
 if TYPE_CHECKING:
     import argparse
+    from ..plugins.importer import ImporterPlugin
 
 class Preprocess(Subcommand):
     name = "preprocess"
     short_desc = "Preprocess SystemRDL and write the result to a file"
-
-    def __init__(self) -> None:
-        self.importers = get_importer_plugins()
 
     def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
         grp = parser.add_argument_group("preprocessor args")
@@ -35,7 +32,7 @@ class Preprocess(Subcommand):
             help="Output path",
         )
 
-    def main(self, options: 'argparse.Namespace') -> None:
+    def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()
         f_info = rdlc.preprocess_file(options.file, options.incdirs)
         with open(options.output, 'w', encoding='utf-8') as f:
