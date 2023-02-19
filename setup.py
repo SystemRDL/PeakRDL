@@ -33,6 +33,7 @@ setuptools.setup(
         "peakrdl-uvm >= 2.2.0",
         "peakrdl-ipxact >= 3.3.0",
         "peakrdl-systemrdl >= 0.1.0",
+        "tomli;python_version<'3.11'"
     ],
     classifiers=(
         "Development Status :: 4 - Beta",

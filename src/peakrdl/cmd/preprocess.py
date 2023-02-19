@@ -12,7 +12,7 @@ class Preprocess(Subcommand):
     name = "preprocess"
     short_desc = "Preprocess SystemRDL and write the result to a file"
 
-    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
         grp = parser.add_argument_group("preprocessor args")
         grp.add_argument(
             "file",

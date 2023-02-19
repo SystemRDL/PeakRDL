@@ -27,7 +27,7 @@ cd $this_dir
 ./testcases.sh
 
 # Run lint
-$pylint --rcfile $this_dir/pylint.rc ../src/peakrdl | tee $this_dir/lint.rpt
+$pylint --rcfile $this_dir/pylint.rc ../src/peakrdl
 
 # Run static type checking
 $mypy $this_dir/../src/peakrdl

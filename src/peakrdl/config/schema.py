@@ -8,7 +8,6 @@ class SchemaException(Exception):
     """
     Raised if encounters a data extraction error.
     """
-    pass
 
 class Schema:
     def extract(self, data: Any, path: str, err_ctx: str) -> Any:
@@ -56,7 +55,7 @@ class Array(Schema):
     """
     def __init__(self, raw_element_schema: RawSchema) -> None:
         super().__init__()
-        self.element_schema = normalize_schema(raw_element_schema)
+        self.element_schema = normalize(raw_element_schema)
 
     def extract(self, data: Any, path: str, err_ctx: str) -> List:
         if not isinstance(data, list):
@@ -79,13 +78,13 @@ class FixedMapping(Schema):
         super().__init__()
         self.schema = {}
         for k,v in schema.items():
-            self.schema[k] = normalize_schema(v)
+            self.schema[k] = normalize(v)
 
-    def extract(self, data: Any, path: str, err_ctx: str) -> List:
+    def extract(self, data: Any, path: str, err_ctx: str) -> Dict[str, Any]:
         if not isinstance(data, dict):
             raise SchemaException(f"{err_ctx}: Expected mapping. Got {type(data).__name__}")
 
-        mapping = {}
+        mapping = {} # type: Dict[str, Any]
         for key, schema in self.schema.items():
             if key not in data:
                 # Not specified. Assign default
@@ -110,9 +109,9 @@ class UserMapping(Schema):
     """
     def __init__(self, raw_value_schema: RawSchema) -> None:
         super().__init__()
-        self.value_schema = normalize_schema(raw_value_schema)
+        self.value_schema = normalize(raw_value_schema)
 
-    def extract(self, data: Any, path: str, err_ctx: str) -> List:
+    def extract(self, data: Any, path: str, err_ctx: str) -> Dict[str, Any]:
         if not isinstance(data, dict):
             raise SchemaException(f"{err_ctx}: Expected mapping. Got {type(data).__name__}")
 
@@ -122,7 +121,7 @@ class UserMapping(Schema):
         return mapping
 
 
-def normalize_schema(raw_schema: RawSchema) -> Schema:
+def normalize(raw_schema: RawSchema) -> Schema:
     """
     Convert a raw user-defined scheme into a fully resolved object tree.
     Shorthand representations of aggregate datatypes are expanded into their
@@ -171,6 +170,9 @@ class Path(String):
             dir_path = os.path.dirname(path)
             s = os.path.join(dir_path, s)
 
+        s = os.path.abspath(s)
+        s = os.path.normpath(s)
+
         if self.shall_exist and not os.path.exists(s):
             raise SchemaException(f"{err_ctx}: Path does not exist: {s}")
 
@@ -214,11 +216,11 @@ class PythonObjectImport(String):
         try:
             module = importlib.import_module(module_name)
         except ModuleNotFoundError as e:
-            raise SchemaException(f"{err_ctx}: {str(e)}")
+            raise SchemaException(f"{err_ctx}: {str(e)}") from e
 
         try:
             cls = getattr(module, object_name)
         except AttributeError as e:
-            raise SchemaException(f"{err_ctx}: {str(e)}")
+            raise SchemaException(f"{err_ctx}: {str(e)}") from e
 
         return cls

@@ -1,12 +1,14 @@
-from typing import TYPE_CHECKING, Optional, List, Type
-import argparse
+from typing import TYPE_CHECKING, Optional, List, Type, Dict, Any
 
 from systemrdl import RDLCompiler
 
-
+from .config import schema
+from .config.loader import AppConfig
 from . import process_input
 
 if TYPE_CHECKING:
+    import argparse
+
     from systemrdl.node import AddrmapNode
     from systemrdl.udp import UDPDefinition
     from .plugins.importer import ImporterPlugin
@@ -26,8 +28,17 @@ class Subcommand:
     #: If left as None, inherits short_desc
     long_desc = None # type: Optional[str]
 
+    #: Shema for additional organization-specific configruation options
+    #: specified by a 'peakrdl.toml' file loaded at startup
+    cfg_schema = {} # type: Dict[str, Any]
 
-    def _init_subparser(self, subgroup: 'argparse._SubParsersAction') -> None:
+    def __init__(self) -> None:
+        self.cfg = {} # type: Dict[str, Any]
+
+    def _load_cfg(self, cfg: AppConfig) -> None:
+        self.cfg = cfg.get_namepsace(self.name, schema.normalize(self.cfg_schema))
+
+    def _init_subparser(self, subgroup: 'argparse._SubParsersAction', importers: 'List[ImporterPlugin]') -> None:
         assert isinstance(self.name, str)
         assert isinstance(self.short_desc, str)
         subparser = subgroup.add_parser(
@@ -35,19 +46,26 @@ class Subcommand:
             help=self.short_desc,
             description=(self.long_desc or self.short_desc)
         )
-        self.add_arguments(subparser)
+        self.add_arguments(subparser, importers)
         subparser.set_defaults(subcommand=self)
 
-        # Add
+        # Add dummy -f and cfg flags. Not actually used as these are already
+        # expanded earlier manually
         subparser.add_argument(
             '-f',
             metavar="FILE",
             dest="argfile",
             help="Specify a file containing more command line arguments"
         )
+        subparser.add_argument(
+            '--peakrdl-cfg',
+            metavar="CFG",
+            dest="peakrdl_cfg",
+            help="Specify a PeakRDL configuration TOML file"
+        )
 
 
-    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
         pass
 
 
@@ -72,12 +90,12 @@ class ExporterSubcommand(Subcommand):
     #: List of User Defined Property definitions that this subcommand provides
     udp_definitions = [] # type: List[Type[UDPDefinition]]
 
-    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
         process_input.add_rdl_compile_arguments(compiler_arg_group)
         process_input.add_elaborate_arguments(compiler_arg_group)
 
-        process_input.add_importer_arguments(parser, self.importers)
+        process_input.add_importer_arguments(parser, importers)
 
         exporter_arg_group = parser.add_argument_group("exporter args")
         if self.generates_output_file:

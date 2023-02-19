@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Sequence, Dict, Any
+from typing import TYPE_CHECKING, List, Dict, Any
 import re
 import os
 
@@ -6,6 +6,7 @@ from systemrdl.messages import FileSourceRef
 
 if TYPE_CHECKING:
     import argparse
+    from typing import Sequence
     from systemrdl import RDLCompiler, AddrmapNode
     from .importer import Importer
 

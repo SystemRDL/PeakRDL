@@ -14,11 +14,11 @@ class ListGlobals(Subcommand):
     name = "globals"
     short_desc = "list all globally accessible types that can be elaborated as top"
 
-    def add_arguments(self, parser: 'argparse._ActionsContainer') -> None:
+    def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")
         process_input.add_rdl_compile_arguments(compiler_arg_group)
 
-        process_input.add_importer_arguments(parser, self.importers)
+        process_input.add_importer_arguments(parser, importers)
 
     def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()
