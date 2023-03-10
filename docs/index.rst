@@ -50,6 +50,7 @@ Links
     gallery
     systemrdl-tutorial
     processing-input
+    configuring
     licensing
 
 .. toctree::
@@ -58,3 +59,5 @@ Links
 
     for-devs/exporter-plugin
     for-devs/importer-plugin
+    for-devs/descriptors
+    for-devs/cfg_schema

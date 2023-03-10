@@ -28,11 +28,11 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         "systemrdl-compiler >= 1.25.3",
-        "peakrdl-regblock >= 0.10.0",
-        "peakrdl-html >= 2.9.0",
-        "peakrdl-uvm >= 2.2.0",
-        "peakrdl-ipxact >= 3.3.0",
-        "peakrdl-systemrdl >= 0.1.0",
+        "peakrdl-html >= 2.10.0",
+        "peakrdl-ipxact >= 3.4.0",
+        "peakrdl-regblock >= 0.11.0",
+        "peakrdl-systemrdl >= 0.2.0",
+        "peakrdl-uvm >= 2.3.0",
         "tomli;python_version<'3.11'"
     ],
     classifiers=(

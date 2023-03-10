@@ -7,10 +7,6 @@ The PeakRDL command line tool can be extended with your own custom exporter
 subcommands. This page describes how you can implement an extension that PeakRDL
 will automatically discover, and make available in the command line interface.
 
-Any exporter you make shall be an installable Python package. See
-`Python's packaging guide <https://packaging.python.org>`_ for more details on
-how to do this.
-
 
 Exporter Implementation
 -----------------------
@@ -23,68 +19,28 @@ context of the PeakRDL command line tool.
 See the `SystemRDL compiler reference for some examples <https://systemrdl-compiler.readthedocs.io/en/stable/examples/print_hierarchy.html>`_.
 
 
-Descriptor Class
-----------------
+Plugin Descriptor Class
+-----------------------
 
-The descriptor class is how you describe your exporter to PeakRDL. This class
-includes help text, defines your command line arguments, and provides a function
-that implements your custom export operation.
+The plugin descriptor class is how you describe your exporter to PeakRDL. This
+class includes help text, defines your command line arguments, and provides a
+function that implements your custom export operation.
 This class should only be a simple wrapper that calls your exporter
-implementation.
-
-For consistency, it is recommended to define this descriptor class in a file
-named ``__peakrdl__.py`` at the root of your package.
-
-Members of this descriptor class are as follows:
-
-.. data:: short_desc
-
-    A brief one-line description of your exporter command.
-
-
-.. data:: long_desc
-
-    (optional) A longer description.
-
-
-.. data:: generates_output_file
-
-    (optional) Defaults to ``True``, which implicitly defines a required command
-    line argument ``-o OUTPUT_PATH``. The result of this is available later in
-    the ``do_export()`` function via ``options.output``.
-
-    Set this to ``False`` if your exporter does not write any output files.
-
-.. data:: udp_definitions
-
-    (optional) List of ``systemrdl.udp.UDPDefinition`` classes that this subcommand
-    provides. Internally, each of these definitions are registered with the
-    compiler as soft UDPs via ``RDLCompiler.register_udp()``
-
-
-.. function:: add_exporter_arguments(self, arg_group)
-
-    (optional) Use this function to define additional command line arguments by
-    using the ``arg_group.add_argument()`` method.
-    See Python's `argparse module <https://docs.python.org/3/library/argparse.html#the-add-argument-method>`_
-    for more details on how to use this.
-
-    :param arg_group: argparse ArgumentParser object
-
-
-.. function:: do_export(self, top_node, options)
-
-    Defines the implementation of your exporter.
-
-    :param top_node: SystemRDL AddrmapNode object representing the top of the design to be exported
-    :param options: argparse Namespace object containing all the command line argument values
-
+implementation, and shall be extended from :class:`~peakrdl.plugins.exporter.ExporterSubcommandPlugin`
 
 Below is a template you can use as a starting point:
 
 .. code-block:: python
 
-    class MyExporterDescriptor:
+    from typing import TYPE_CHECKING
+
+    from peakrdl.plugins.exporter import ExporterSubcommandPlugin
+
+    if TYPE_CHECKING:
+        import argparse
+        from systemrdl.node import AddrmapNode
+
+    class MyExporterDescriptor(ExporterSubcommandPlugin):
         short_desc = "..."
         long_desc = "..."
 
@@ -94,16 +50,29 @@ Below is a template you can use as a starting point:
         def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
             raise NotImplementedError
 
+For more advanced plugins, see the full :class:`~peakrdl.plugins.exporter.ExporterSubcommandPlugin`
+reference.
 
 For a complete example, see `PeakRDL-ipxact's __peakrdl__.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/src/peakrdl_ipxact/__peakrdl__.py>`_.
 
 
+Plugin Discovery
+----------------
 
-Entry Point
------------
+There are two ways PeakRDL can discover your plugin.
+
+Via Entry Point
+^^^^^^^^^^^^^^^
 
 The PeakRDL command line tool automatically discovers exporters by scanning the
 entry points that installed packages advertise.
+See
+`Python's packaging guide <https://packaging.python.org>`_ for more details on
+how to make an installable package.
+
+For consistency, it is recommended to define your plugin descriptor class in a
+file named ``__peakrdl__.py`` at the root of your package.
+
 The example below shows how you would provide an entry point linkage to your
 exporter's descriptor class inside your package's ``setup.py``:
 
@@ -133,3 +102,27 @@ exporter's descriptor class inside your package's ``setup.py``:
   subcommand name. This text is what is used in the command line interface.
 
 For a complete example, see `PeakRDL-ipxact's setup.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/setup.py>`_.
+
+
+Via the PeakRDL configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An alternative method that avoids having to make your own pip-installable
+package is to specify the plugin import entry point via the PeakRDL
+configuration file.
+
+For example, if your plugin descriptor was deifned in a Python file located in
+``/opt/my_peakrdl_plugins/my_exporter.py``, the following configuration would
+instruct PeakRDL to load it:
+
+.. code-block:: toml
+
+    [peakrdl]
+
+    # Paths for Python to search for importable modules
+    python_search_paths = [
+        "/opt/my_peakrdl_plugins"
+    ]
+
+    # Define entry-point spec for the exporter
+    plugins.exporters.my-exporter = "my_exporter:MyExporterDescriptor"

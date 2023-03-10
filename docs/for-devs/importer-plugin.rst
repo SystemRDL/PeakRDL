@@ -7,7 +7,7 @@ Importers allow you to extend the types of files that the PeakRDL tool is able
 to interpret. This page describes how you can implement an extension that PeakRDL
 will automatically discover and use when interpreting its input files.
 
-Similar to an exporter, any importer you make shall be an installable Python package. See
+FIXME: Similar to an exporter, any importer you make shall be an installable Python package. See
 `Python's packaging guide <https://packaging.python.org>`_ for more details on
 how to do this.
 
@@ -17,59 +17,32 @@ Importer Implementation
 
 First, implement your importer class. It is good practice to implement
 this separately from the descriptor class below so that you provide good separation
-of concepts. This will allow others to use your exporter on its own, outside the
+of concepts. This will allow others to use your importer on its own, outside the
 context of the PeakRDL command line tool.
 
 See the `SystemRDL compiler reference for an example <https://systemrdl-compiler.readthedocs.io/en/stable/examples/json_importer.html>`_.
 
 
-Descriptor Class
-----------------
+Plugin Descriptor Class
+-----------------------
 
-For consistency, it is recommended to define this descriptor class in a file
-named ``__peakrdl__.py`` at the root of your package.
-
-Members of this descriptor class are as follows:
-
-.. data:: file_extensions
-
-    A list of one or more file extensions your importer expects to support.
-    A file's extension is used as a rough first-pass method to identify which
-    importer is appropriate for a given file type.
-
-.. function:: is_compatible(self, path)
-
-    This function is used to further determine if this importer is capable of
-    processing the given input file.
-    It is recommended to open the file, and perform a low-cost scan of the
-    contents to quickly determine if the file's format appears to be compatible
-    with this importer.
-
-    :param path: Path to the input file
-
-.. function:: add_importer_arguments(self, arg_group)
-
-    (optional) Use this function to define additional command line arguments that
-    are relevant to this importer via the ``arg_group.add_argument()`` method.
-    See Python's `argparse module <https://docs.python.org/3/library/argparse.html#the-add-argument-method>`_
-    for more details on how to use this.
-
-    :param arg_group: argparse ArgumentParser object
-
-.. function:: do_import(self, rdlc, options, path)
-
-    Defines the implementation of your importer.
-
-    :param rdlc: Reference to the SystemRDL ``RDLCompiler`` object.
-    :param options: argparse Namespace object containing all the command line argument values
-    :param path: Path to the input file
-
+The plugin descriptor class is how you describe your importer to PeakRDL.
+This class should only be a simple wrapper that calls your importer
+implementation, and shall be extended from :class:`~peakrdl.plugins.importer.ImporterPlugin`
 
 Below is a template you can use as a starting point:
 
 .. code-block:: python
 
-    class MyImporterDescriptor:
+    from typing import TYPE_CHECKING
+
+    from peakrdl.plugins.importer import ImporterPlugin
+
+    if TYPE_CHECKING:
+        import argparse
+    from systemrdl import RDLCompiler
+
+    class MyImporterDescriptor(ImporterPlugin):
         file_extensions = ["yaml", "yml"]
 
         def is_compatible(self, path: str) -> bool:
@@ -81,15 +54,29 @@ Below is a template you can use as a starting point:
         def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str):
             raise NotImplementedError
 
+For more advanced plugins, see the full :class:`~peakrdl.plugins.importer.ImporterPlugin`
+reference.
+
 For a complete example, see `PeakRDL-ipxact's __peakrdl__.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/src/peakrdl_ipxact/__peakrdl__.py>`_.
 
 
+Plugin Discovery
+----------------
 
-Entry Point
------------
+There are two ways PeakRDL can discover your plugin.
+
+Via Entry Point
+---------------
 
 The PeakRDL command line tool automatically discovers importers by scanning the
 entry points that installed packages advertise.
+See
+`Python's packaging guide <https://packaging.python.org>`_ for more details on
+how to make an installable package.
+
+For consistency, it is recommended to define your plugin descriptor class in a
+file named ``__peakrdl__.py`` at the root of your package.
+
 The example below shows how you would provide an entry point linkage to your
 importer's descriptor class inside your package's ``setup.py``:
 
@@ -117,3 +104,28 @@ importer's descriptor class inside your package's ``setup.py``:
   points to your descriptor class definition
 
 For a complete example, see `PeakRDL-ipxact's setup.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/setup.py>`_.
+
+
+
+Via the PeakRDL configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An alternative method that avoids having to make your own pip-installable
+package is to specify the plugin import entry point via the PeakRDL
+configuration file.
+
+For example, if your plugin descriptor was deifned in a Python file located in
+``/opt/my_peakrdl_plugins/my_importer.py``, the following configuration would
+instruct PeakRDL to load it:
+
+.. code-block:: toml
+
+    [peakrdl]
+
+    # Paths for Python to search for importable modules
+    python_search_paths = [
+        "/opt/my_peakrdl_plugins"
+    ]
+
+    # Define entry-point spec for the exporter
+    plugins.importers.my-importer = "my_importer:MyImporterDescriptor"

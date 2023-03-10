@@ -44,26 +44,28 @@ def _discover_cfg_file() -> Optional[str]:
     if os.path.isfile(path):
         return path
 
+    # 2.
     path = os.path.abspath(".peakrdl.toml")
     if os.path.isfile(path):
         return path
 
-    # 2. Via environment variable
+    # 3. Via environment variable
     if "PEAKRDL_CFG" in os.environ:
         path = os.environ["PEAKRDL_CFG"]
         if os.path.isfile(path):
             return path
 
-    # 3. In home directory
+    # 4. In home directory
     path = os.path.expanduser("~/.peakrdl.toml")
     if os.path.isfile(path):
         return path
 
+    # 5.
     path = os.path.expanduser("~/.config/peakrdl.toml")
     if os.path.isfile(path):
         return path
 
-    # 4. In /etc/
+    # 6. In /etc/
     path = "/etc/peakrdl.toml"
     if os.path.isfile(path):
         return path

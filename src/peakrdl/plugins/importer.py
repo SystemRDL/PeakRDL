@@ -9,24 +9,7 @@ if TYPE_CHECKING:
 
 class ImporterPlugin(Importer):
     """
-    Importers external to this package can register an implementation that can
-    be loaded into PeakRDL
-
-    The importer definition is provided by a class extended from this class.
-
-    .. code:: python
-
-        class MyImporter(ImporterPlugin):
-            file_extensions = ["foo"]
-
-            def is_compatible(self, path: str) -> bool:
-                raise NotImplementedError
-
-            def add_importer_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
-                pass
-
-            def do_import(self, rdlc: 'RDLCompiler', options: 'argparse.Namespace', path: str):
-                raise NotImplementedError
+    Base class for importer plugins
     """
     def __init__(self, dist_name: Optional[str]=None, dist_version: Optional[str]=None) -> None:
         super().__init__()

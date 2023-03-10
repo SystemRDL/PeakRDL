@@ -164,6 +164,8 @@ class Path(String):
 
     def extract(self, data: Any, path: str, err_ctx: str) -> Any:
         s = super().extract(data, path, err_ctx)
+        s = os.path.expanduser(s)
+
         if not os.path.isabs(s):
             # relative path.
             # extend it to be relative to the config file

@@ -9,24 +9,7 @@ if TYPE_CHECKING:
 
 class ExporterSubcommandPlugin(ExporterSubcommand):
     """
-    Exporters external to this package can register a subcommand implementation
-    that can be loaded into PeakRDL's subcommand list.
-
-    The subcommand definition is provided by a class extended from this class.
-
-    .. code:: python
-
-        class MyExporter(ExporterSubcommandPlugin):
-            short_desc = "..."
-            long_desc = "..."
-            generates_output_file = True
-            udp_definitions = []
-
-            def add_exporter_arguments(self, arg_group: 'argparse.ArgumentParser') -> None:
-                pass
-
-            def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
-                raise NotImplementedError
+    Base class for exporter subcommand plugins.
     """
     def __init__(self, dist_name: Optional[str]=None, dist_version: Optional[str]=None) -> None:
         super().__init__()

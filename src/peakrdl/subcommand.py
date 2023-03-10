@@ -18,21 +18,25 @@ class Subcommand:
     Base command line interface subcommand class
     """
 
-    #: Subcommand name
+    # Subcommand name
     name = None # type: str
 
-    #: Short-form description
+    #: A brief one-line description of the exporter command.
     short_desc = None # type: str
 
-    #: Longer-form description
+    #: Longer-form description.
     #: If left as None, inherits short_desc
     long_desc = None # type: Optional[str]
 
-    #: Shema for additional organization-specific configruation options
-    #: specified by a 'peakrdl.toml' file loaded at startup
+    #: Schema for additional organization-specific configuration options
+    #: specified by a 'peakrdl.toml' file loaded at startup.
+    #:
+    #: For more details, see :ref:`cfg_schema`
     cfg_schema = {} # type: Dict[str, Any]
 
     def __init__(self) -> None:
+        #: Resolved configuration data that was extracted from the PeakRDL TOML,
+        #: and validated.
         self.cfg = {} # type: Dict[str, Any]
 
     def _load_cfg(self, cfg: AppConfig) -> None:
@@ -84,10 +88,17 @@ class ExporterSubcommand(Subcommand):
     - Export <something>
     """
 
-    #: Whether this subcommand should require the user to provide an output path
+    #: Determines whether this subcommand should require the user to provide an
+    #: output path. If ``True``, adds a required ``-o`` command-line argument.
+    #: The result of this is available later in the ``do_export()`` function
+    #: via ``options.output``.
+    #:
+    #: Set this to ``False`` if your exporter does not write any output files.
     generates_output_file = True
 
-    #: List of User Defined Property definitions that this subcommand provides
+    #: List of ``systemrdl.udp.UDPDefinition`` classes that this subcommand
+    #: provides. Internally, each of these definitions are registered with the
+    #: compiler as soft UDPs via ``RDLCompiler.register_udp()``
     udp_definitions = [] # type: List[Type[UDPDefinition]]
 
     def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
@@ -108,7 +119,24 @@ class ExporterSubcommand(Subcommand):
         self.add_exporter_arguments(exporter_arg_group)
 
     def add_exporter_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
-        pass
+        """
+        Override this function to define additional command line arguments by
+        using the ``arg_group.add_argument()`` method.
+        See Python's `argparse module <https://docs.python.org/3/library/argparse.html#the-add-argument-method>`_
+        for more details on how to use this.
+
+        .. note::
+
+            Not all exporter configuration options are appropriate as command-line arguments.
+            For options that will likely remain static for a given user/organization,
+            consider using the PeakRDL TOML configuration mechanism via the
+            ``cft_schema`` and ``cfg`` class members.
+
+        Parameters
+        ----------
+        arg_group: ``argparse.ArgumentParser``
+            Add more command line arguments via this object.
+        """
 
     def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
         rdlc = RDLCompiler()
@@ -127,4 +155,14 @@ class ExporterSubcommand(Subcommand):
 
 
     def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:
+        """
+        Override this function to define the implementation of your exporter.
+
+        Parameters
+        ----------
+        top_node: ``systemrdl.node.AddrmapNode``
+            Node representing the top of the design to be exported
+        options: ``argparse.Namespace``
+            Argparse namespace object containing all the command line argument values.
+        """
         raise NotImplementedError
