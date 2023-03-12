@@ -38,10 +38,10 @@ class Boolean(_SimpleType):
     TYPE = bool
 
 class DateTime(_SimpleType):
-    TYPE = datetime.datetime
+    TYPE = datetime.datetime # type: ignore
 
 class Date(_SimpleType):
-    TYPE = datetime.date
+    TYPE = datetime.date # type: ignore
 
 class Time(_SimpleType):
     TYPE = datetime.time

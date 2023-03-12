@@ -2,14 +2,14 @@ from typing import Optional, List, Any, Dict
 import os
 import sys
 
+from . import schema
+
 if sys.version_info[0:2] < (3, 11):
     # Prior to py3.11, tomllib is a 3rd party package
     import tomli as tomllib
 else:
     # py3.11 and onwards, tomli was absorbed into the standard library as tomllib
     import tomllib
-
-from . import schema
 
 class AppConfig:
     def __init__(self, path: str, raw_data: Dict[str, Any]) -> None:

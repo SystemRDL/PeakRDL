@@ -59,7 +59,7 @@ class Importer:
 
 
     def add_importer_arguments(self, arg_group: 'argparse._ActionsContainer') -> None:
-                """
+        """
         Override this function to define additional command line arguments by
         using the ``arg_group.add_argument()`` method.
         See Python's `argparse module <https://docs.python.org/3/library/argparse.html#the-add-argument-method>`_
