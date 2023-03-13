@@ -1,0 +1,18 @@
+[run]
+branch = True
+#relative_files = True
+
+[paths]
+source =
+    ../src/peakrdl/
+    */site-packages/*/peakrdl
+    */site-packages/peakrdl
+
+[report]
+exclude_lines =
+    pragma: no cover
+    raise RuntimeError
+    raise NotImplementedError
+    if TYPE_CHECKING:
+
+precision = 1

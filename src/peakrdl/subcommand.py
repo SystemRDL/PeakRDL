@@ -70,7 +70,7 @@ class Subcommand:
 
 
     def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
-        pass
+        pass # pragma: no cover
 
 
     def main(self, importers: 'List[ImporterPlugin]', options: 'argparse.Namespace') -> None:
