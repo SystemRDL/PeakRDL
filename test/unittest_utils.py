@@ -1,13 +1,12 @@
 import unittest
 from unittest.mock import patch
 import os
-import shutil
 
 import pytest
 
 class PeakRDLTestcase(unittest.TestCase):
     this_dir = os.path.dirname(__file__)
-    examples_dir = os.path.join(this_dir, "../examples")
+    testdata_dir = os.path.join(this_dir, "testdata")
 
     def run_commandline(self, argv, expects_error=False) -> None:
         argv = ["peakrdl"] + argv

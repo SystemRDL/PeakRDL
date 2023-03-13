@@ -1,0 +1,124 @@
+
+// From 5.1.2.1.2
+mem fixed_mem #(longint unsigned word_size = 32,
+    longint unsigned memory_size = word_size * 4096) {
+    mementries = memory_size / word_size ;
+    memwidth = word_size ;
+};
+
+// From 5.1.2.1.1
+reg myReg #(longint unsigned SIZE = 32, boolean SHARED = true) {
+    regwidth = SIZE;
+    shared = SHARED;
+    field {} data[SIZE - 1];
+};
+
+addrmap myAmap {
+    myReg reg32;
+    myReg reg32_arr[8];
+    myReg #(.SIZE(16)) reg16;
+    myReg #(.SIZE(8), .SHARED(false)) reg8;
+
+    external fixed_mem mem32;
+    external fixed_mem #(.word_size(64)) mem64;
+};
+
+//------------------------------------------------------------------------------
+
+reg param_reg #(
+    string NAME = "myname",
+    boolean SHARED = false,
+    string FIELD_SLICES[] = '{"dat"}
+){
+    name = NAME;
+    shared = SHARED;
+    field {} data;
+
+    data->hdl_path_slice = FIELD_SLICES;
+};
+
+addrmap amap2 {
+    param_reg reg1;
+
+    param_reg #(
+        .NAME("myname"),
+        .SHARED(false),
+        .FIELD_SLICES('{"dat"})
+    ) reg2;
+
+    param_reg #(
+        .NAME("othername"),
+        .SHARED(true),
+        .FIELD_SLICES('{"foo"})
+    ) reg3;
+};
+
+//------------------------------------------------------------------------------
+
+// From issue #12
+addrmap nested {
+
+    reg r1 #(longint unsigned WIDTH=1)  {
+        field {} f[WIDTH], f2[WIDTH+1];
+    };
+
+    regfile rf1 #(longint unsigned WIDTH=2) {
+        reg r2 #(longint unsigned WIDTH=3)  {
+            field {} f[WIDTH];
+        } #(.WIDTH(WIDTH)) r_inst1;
+
+        r1 #(.WIDTH(WIDTH)) r_inst2;
+    };
+
+    rf1 #(.WIDTH(4)) rf_inst;
+    r1 #(.WIDTH(5)) r1_inst, r1_inst2;
+};
+
+//------------------------------------------------------------------------------
+
+addrmap elab_params #(
+    string STR="default",
+    longint unsigned INT=1,
+    longint unsigned INTARR[]= '{2,3},
+    onwritetype ONWR=woset,
+    boolean BOOL=true
+) {
+    reg reg_t #(
+        longint unsigned WIDTH = 4
+    ) {
+        field {} f[WIDTH];
+    };
+
+
+    reg_t #(.WIDTH(INT)) r1;
+    reg_t #(.WIDTH(INTARR[0])) r2;
+    reg_t #(.WIDTH(INTARR[1])) r3;
+
+    r1.f->onwrite = ONWR;
+    r2.f->donttest = BOOL;
+    r3.f->name = STR;
+};
+
+//------------------------------------------------------------------------------
+
+addrmap param_scope {
+    regfile rf_t #(
+        longint N = 1
+    ) {
+        reg reg_t {
+            field {} ff[N];
+        };
+
+        regfile rf2_t {
+            reg_t rr;
+        };
+
+        regfile {
+            rf2_t rf2;
+        } rf3;
+    };
+
+    rf_t #(.N(2)) rfX;
+    rf_t #(.N(3)) rfY;
+    rf_t rfZ;
+};

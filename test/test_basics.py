@@ -1,5 +1,4 @@
 import os
-import shutil
 from unittest_utils import PeakRDLTestcase
 
 class TestBasics(PeakRDLTestcase):
@@ -18,85 +17,94 @@ class TestBasics(PeakRDLTestcase):
         self.assertIn("regblock", captured.out)
         self.assertIn("html", captured.out)
 
-    def test_dump(self):
+    def test_parameter_override(self):
+        with self.subTest("good"):
+            self.run_commandline([
+                'dump',
+                os.path.join(self.testdata_dir, "parameters.rdl"),
+                "--top", "elab_params",
+                "-P", 'STR="override"',
+                "-P", 'INT=2',
+                "-P", "INTARR='{3,2}",
+                "-P", "ONWR=woclr",
+                "-P", "BOOL=false",
+            ])
+
+        with self.subTest("bad param"):
+            self.run_commandline([
+                'dump',
+                os.path.join(self.testdata_dir, "parameters.rdl"),
+                "--top", "elab_params",
+                "-P", 'STR',
+            ], expects_error=True)
+
+        with self.subTest("bad syntax"):
+            self.run_commandline([
+                'dump',
+                os.path.join(self.testdata_dir, "parameters.rdl"),
+                "--top", "elab_params",
+                "-P", "INTARR='{3 2}",
+            ], expects_error=True)
+
+        with self.subTest("bad type"):
+            self.run_commandline([
+                'dump',
+                os.path.join(self.testdata_dir, "parameters.rdl"),
+                "--top", "elab_params",
+                "-P", 'STR=1',
+            ], expects_error=True)
+
+    def test_input_dne(self):
         self.run_commandline([
             'dump',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
+            os.path.join(self.testdata_dir, "this_file_doesnt_exist.rdl"),
+        ], expects_error=True)
+
+    def test_f_argfile(self):
+        self.run_commandline([
+            '-f', os.path.join(self.testdata_dir, "dump_nested.f"),
         ])
         captured = self.capsys.readouterr()
         expected = "\n".join([
-            "0x0-0x0: atxmega_spi.CTRL",
-            "0x1-0x1: atxmega_spi.INTCTRL",
-            "0x2-0x2: atxmega_spi.STATUS",
-            "0x3-0x3: atxmega_spi.DATA",
+            "0x00-0x03: nested.rf_inst.r_inst1",
+            "0x04-0x07: nested.rf_inst.r_inst2",
+            "0x08-0x0b: nested.r1_inst",
+            "0x0c-0x0f: nested.r1_inst2",
             "",
         ])
         self.assertEqual(captured.out, expected)
 
-    def test_dump_unroll(self):
-        self.run_commandline([
-            'dump',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            "--unroll",
-        ])
-        captured = self.capsys.readouterr()
-        expected = "\n".join([
-            "0x0-0x0: atxmega_spi.CTRL",
-            "0x1-0x1: atxmega_spi.INTCTRL",
-            "0x2-0x2: atxmega_spi.STATUS",
-            "0x3-0x3: atxmega_spi.DATA",
-            "",
-        ])
-        self.assertEqual(captured.out, expected)
+    def test_f_argfile_errors(self):
+        with self.subTest("file DNE"):
+            self.run_commandline([
+                '-f', os.path.join(self.testdata_dir, "dne.f"),
+            ], expects_error=True)
 
-    def test_globals(self):
-        self.run_commandline([
-            'globals',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-        ])
-        captured = self.capsys.readouterr()
-        expected = "\n".join([
-            "atxmega_spi",
-            "",
-        ])
-        self.assertEqual(captured.out, expected)
+        with self.subTest("file missing"):
+            self.run_commandline([
+                '-f',
+            ], expects_error=True)
 
-    def test_uvm(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'uvm',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            '-o', os.path.join(path, "out.sv"),
-        ])
+        with self.subTest("circular ref"):
+            self.run_commandline([
+                '-f', os.path.join(self.testdata_dir, "circular.f"),
+            ], expects_error=True)
 
-    def test_regblock(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'regblock',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            '-o', path,
-        ])
+    def test_cfg_file_errors(self):
+        with self.subTest("file DNE"):
+            self.run_commandline([
+                '--peakrdl-cfg', os.path.join(self.testdata_dir, "dne.toml"),
+                "--plugins"
+            ], expects_error=True)
 
-    def test_ipxact(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'ip-xact',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            '-o', os.path.join(path, "out.xml"),
-        ])
+        with self.subTest("file missing"):
+            self.run_commandline([
+                "--plugins",
+                '--peakrdl-cfg',
+            ], expects_error=True)
 
-    def test_html(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'html',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            '-o', path,
-        ])
-
-    def test_preprocess(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'preprocess',
-            os.path.join(self.examples_dir, "atxmega_spi.rdl"),
-            '-o', os.path.join(path, "pp.sv"),
-        ])
+        with self.subTest("file invalid"):
+            self.run_commandline([
+                '--peakrdl-cfg', os.path.join(self.testdata_dir, "circular.f"),
+                "--plugins"
+            ], expects_error=True)

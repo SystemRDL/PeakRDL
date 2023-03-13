@@ -1,0 +1,44 @@
+addrmap regblock {
+    default sw=rw;
+    default hw=r;
+
+    reg my_reg {
+        field {} a[8] = 0x23;
+        field {} b = 0;
+        field {} c[31:31] = 1;
+    };
+
+    my_reg r0 @0x000;
+    r0.a->reset = 0x42;
+
+    my_reg r1[2][3][4] @0x10 += 4;
+
+    my_reg r2 @0x1000;
+    r2.a->reset = 0x11;
+
+
+    reg subreg {
+        field {} x[7:4] = 1;
+    };
+    regfile subrf {
+        subreg r1[4] @ 0x0 += 4;
+        regfile {
+            subreg r1 @ 0x0;
+            subreg r2[2] @ 0x4 += 4;
+            subreg r3 @ 0xc;
+        } sub[2] @ 0x10 += 0x10;
+        subreg r2[4] @ 0x30 += 4;
+    };
+    subrf sub2[2] @ 0x2000 += 0x40;
+    subreg r3 @ 0x2080;
+
+    reg {
+        field {} f1[19:12] = 0;
+        field {} f2[30:20] = 0;
+    } rw_reg @ 0x3000;
+
+    reg {
+        field {} f1[12:19] = 0;
+        field {} f2[20:30] = 0;
+    } rw_reg_lsb0 @ 0x3004;
+};
