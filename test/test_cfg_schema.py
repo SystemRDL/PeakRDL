@@ -123,3 +123,21 @@ class TestSchema(unittest.TestCase):
             raw_data = "run.sh"
             with self.assertRaises(schema.SchemaException):
                 sch.extract(raw_data, __file__, "testcase")
+
+    def test_py_errors(self):
+        sch = schema.PythonObjectImport()
+
+        with self.subTest("syntax"):
+            raw_data = "bad import spec"
+            with self.assertRaises(schema.SchemaException):
+                sch.extract(raw_data, __file__, "testcase")
+
+        with self.subTest("module dne"):
+            raw_data = "dne_module:ClassName"
+            with self.assertRaises(schema.SchemaException):
+                sch.extract(raw_data, __file__, "testcase")
+
+        with self.subTest("cLass dne"):
+            raw_data = "sys:ClassDNE"
+            with self.assertRaises(schema.SchemaException):
+                sch.extract(raw_data, __file__, "testcase")

@@ -1,0 +1,6 @@
+[peakrdl]
+
+python_search_paths = [".."]
+
+plugins.importers.dummy_xml2 = "dummy_importer:DummyImporter"
+plugins.exporters.dummy_xport = "dummy_exporter:DummyExporter"

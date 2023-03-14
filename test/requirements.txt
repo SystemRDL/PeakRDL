@@ -1,5 +1,5 @@
 pytest
-pytest-cov
-coverage
 pylint
 mypy
+pytest-cov
+coveralls>=3.0.0

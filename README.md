@@ -1,5 +1,6 @@
 [![Documentation Status](https://readthedocs.org/projects/peakrdl/badge/?version=latest)](http://peakrdl.readthedocs.io)
 [![build](https://github.com/SystemRDL/PeakRDL/workflows/build/badge.svg)](https://github.com/SystemRDL/PeakRDL/actions?query=workflow%3Abuild+branch%3Amain)
+[![Coverage Status](https://coveralls.io/repos/github/SystemRDL/PeakRDL/badge.svg?branch=main)](https://coveralls.io/github/SystemRDL/PeakRDL?branch=main)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/peakrdl.svg)](https://pypi.org/project/peakrdl)
 
 # PeakRDL

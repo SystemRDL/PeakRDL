@@ -2,7 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - 'dev/**'
   pull_request:
     branches: [ main ]
   release:
@@ -48,7 +50,32 @@ jobs:
       - name: Test
         run: |
           cd test
-          pytest
+          pytest --cov=peakrdl
+
+      - name: Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+        run: |
+          cd test
+          coveralls --service=github
+
+  finish_coveralls:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+        run: |
+          python -m pip install -U coveralls>=3.0.0
+          coveralls --service=github --finish
 
 #-------------------------------------------------------------------------------
   lint:

@@ -16,7 +16,7 @@ if sys.version_info >= (3,10,0):
     def _get_name_from_dist(dist: 'Distribution') -> str:
         return dist.name
 
-elif sys.version_info >= (3,8,0):
+elif sys.version_info >= (3,8,0): # pragma: no cover
     from importlib import metadata
 
     def _get_entry_points(group_name: str) -> List[Tuple['EntryPoint', 'Distribution']]:
@@ -30,7 +30,7 @@ elif sys.version_info >= (3,8,0):
     def _get_name_from_dist(dist: 'Distribution') -> str:
         return dist.metadata["Name"]
 
-else:
+else: # pragma: no cover
     import pkg_resources # type: ignore
 
     def _get_entry_points(group_name: str) -> List[Tuple['EntryPoint', 'Distribution']]:

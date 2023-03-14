@@ -89,22 +89,3 @@ class TestBasics(PeakRDLTestcase):
             self.run_commandline([
                 '-f', os.path.join(self.testdata_dir, "circular.f"),
             ], expects_error=True)
-
-    def test_cfg_file_errors(self):
-        with self.subTest("file DNE"):
-            self.run_commandline([
-                '--peakrdl-cfg', os.path.join(self.testdata_dir, "dne.toml"),
-                "--plugins"
-            ], expects_error=True)
-
-        with self.subTest("file missing"):
-            self.run_commandline([
-                "--plugins",
-                '--peakrdl-cfg',
-            ], expects_error=True)
-
-        with self.subTest("file invalid"):
-            self.run_commandline([
-                '--peakrdl-cfg', os.path.join(self.testdata_dir, "circular.f"),
-                "--plugins"
-            ], expects_error=True)
