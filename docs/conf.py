@@ -21,6 +21,7 @@ import datetime
 project = 'PeakRDL'
 copyright = '%d, Alex Mykyta' % datetime.datetime.now().year
 author = 'Alex Mykyta'
+html_title = project
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,7 +48,17 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "sphinx_book_theme"
+
+html_theme_options = {
+    "repository_url": "https://github.com/SystemRDL/PeakRDL",
+    "path_to_docs": "docs",
+    "use_download_button": False,
+    "use_source_button": True,
+    "use_repository_button": True,
+    "use_issues_button": True,
+}
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
