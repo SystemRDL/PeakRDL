@@ -55,6 +55,13 @@ Links
 
 .. toctree::
     :hidden:
+    :caption: Additional Exporter Docs
+
+    regblock <https://peakrdl-regblock.readthedocs.io/en/latest>
+    ip-xact <https://peakrdl-ipxact.readthedocs.io/en/latest/exporter.html>
+
+.. toctree::
+    :hidden:
     :caption: For Developers
 
     for-devs/exporter-plugin
