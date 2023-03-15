@@ -1,3 +1,2 @@
 pygments-systemrdl
 sphinx-book-theme
-sphinx >= 6.1
