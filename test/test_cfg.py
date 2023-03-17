@@ -60,3 +60,16 @@ class TestBasics(PeakRDLTestcase):
             del os.environ["PEAKRDL_CFG"]
             captured = self.capsys.readouterr()
             self.assertIn("dummy_xml", captured.out)
+
+    def test_cfg_schema_errors(self):
+        with self.subTest("bad pythonpath"):
+            self.run_commandline([
+                '--peakrdl-cfg', os.path.join(self.testdata_dir, "bad_pythonpath.toml"),
+                "--plugins"
+            ], expects_error=True)
+
+        with self.subTest("bad namespace schema"):
+            self.run_commandline([
+                '--peakrdl-cfg', os.path.join(self.testdata_dir, "bad_plugin.toml"),
+                "--plugins"
+            ], expects_error=True)
