@@ -21,7 +21,16 @@ elif sys.version_info >= (3,8,0): # pragma: no cover
 
     def _get_entry_points(group_name: str) -> List[Tuple['EntryPoint', 'Distribution']]:
         eps = []
+        dist_names = set()
         for dist in metadata.distributions():
+            # Due to a bug in importlib.metadata's distributions iterator, in
+            # some cases editable installs will cause duplicate dist entries.
+            # Filter this out.
+            dist_name = get_name_from_dist(dist)
+            if dist_name in dist_names:
+                continue
+            dist_names.add(dist_name)
+
             for ep in dist.entry_points:
                 if ep.group == group_name:
                     eps.append((ep, dist))
