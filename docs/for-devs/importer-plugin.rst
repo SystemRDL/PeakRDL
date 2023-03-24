@@ -7,10 +7,6 @@ Importers allow you to extend the types of files that the PeakRDL tool is able
 to interpret. This page describes how you can implement an extension that PeakRDL
 will automatically discover and use when interpreting its input files.
 
-FIXME: Similar to an exporter, any importer you make shall be an installable Python package. See
-`Python's packaging guide <https://packaging.python.org>`_ for more details on
-how to do this.
-
 
 Importer Implementation
 -----------------------
