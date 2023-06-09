@@ -119,15 +119,9 @@ def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_fi
 
 
 def elaborate(rdlc: 'RDLCompiler', parameters: Dict[str, Any], options: 'argparse.Namespace') -> 'AddrmapNode':
-    try:
-        root = rdlc.elaborate(
-            top_def_name=options.top_def_name,
-            inst_name=options.inst_name,
-            parameters=parameters
-        )
-    except (ValueError, TypeError) as e:
-        # Parameter issues raise ValueError or TypeError
-        # TODO: Fix exception types once they become specialized in the compiler
-        rdlc.msg.fatal(e.args[0])
-
+    root = rdlc.elaborate(
+        top_def_name=options.top_def_name,
+        inst_name=options.inst_name,
+        parameters=parameters
+    )
     return root.top

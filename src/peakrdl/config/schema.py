@@ -226,3 +226,17 @@ class PythonObjectImport(String):
             raise SchemaException(f"{err_ctx}: {str(e)}") from e
 
         return cls
+
+class Choice(String):
+    """
+    Schema that matches against a specific set of allowed strings
+    """
+    def __init__(self, choices: List[str]) -> None:
+        super().__init__()
+        self.choices = choices
+
+    def extract(self, data: Any, path: str, err_ctx: str) -> Any:
+        s = super().extract(data, path, err_ctx)
+        if s not in self.choices:
+            raise SchemaException(f"{err_ctx}: Value '{s}' is not a valid choice. Must be one of: {','.join(self.choices)}")
+        return s
