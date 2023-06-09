@@ -25,6 +25,14 @@ def add_rdl_compile_arguments(parser: 'argparse._ActionsContainer') -> None:
         action="append",
         help='Search directory for files included with `include "filename"',
     )
+    parser.add_argument(
+        "-D",
+        dest="defines",
+        metavar="MACRO[=VALUE]",
+        action="append",
+        default=[],
+        help="Pre-define a Verilog-style preprocessor macro"
+    )
 
 
 def add_importer_arguments(parser: 'argparse._ActionsContainer', importers: 'Sequence[Importer]') -> None:
@@ -75,8 +83,22 @@ def parse_parameters(rdlc: 'RDLCompiler', parameter_options: List[str]) -> Dict[
 
     return parameters
 
+def parse_defines(rdlc: 'RDLCompiler', define_options: List[str]) -> Dict[str, str]:
+    defines = {}
+    for raw_def in define_options:
+        m = re.fullmatch(r"(\w+)(?:=(.+))?", raw_def)
+        if not m:
+            rdlc.msg.fatal(f"Invalid define argument: {raw_def}")
+
+        k = m.group(1)
+        v = m.group(2) or ""
+        defines[k] = v
+    return defines
+
 
 def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
+    defines = parse_defines(rdlc, options.defines)
+
     for file in input_files:
         if not os.path.exists(file):
             rdlc.msg.fatal(f"Input file does not exist: {file}")
@@ -87,6 +109,7 @@ def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_fi
             rdlc.compile_file(
                 file,
                 incl_search_paths=options.incdirs,
+                defines=defines,
             )
         else:
             # Is foreign input file.
