@@ -27,12 +27,12 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        "systemrdl-compiler >= 1.26.0",
-        "peakrdl-html >= 2.10.1",
-        "peakrdl-ipxact >= 3.4.1",
+        "systemrdl-compiler >= 1.26.0, < 2",
+        "peakrdl-html >= 2.10.1, < 3",
+        "peakrdl-ipxact >= 3.4.1, < 4",
         "peakrdl-regblock >= 0.15.0",
         "peakrdl-systemrdl >= 0.3.0",
-        "peakrdl-uvm >= 2.3.0",
+        "peakrdl-uvm >= 2.3.0, < 3",
         "tomli;python_version<'3.11'"
     ],
     classifiers=(
@@ -55,5 +55,6 @@ setuptools.setup(
         "Documentation": "https://peakrdl.readthedocs.io",
         "Source": "https://github.com/SystemRDL/PeakRDL",
         "Tracker": "https://github.com/SystemRDL/PeakRDL/issues",
+        "Changelog": "https://github.com/SystemRDL/PeakRDL/releases",
     },
 )
