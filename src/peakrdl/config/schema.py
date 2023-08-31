@@ -46,6 +46,10 @@ class Date(_SimpleType):
 class Time(_SimpleType):
     TYPE = datetime.time
 
+class AnyType(Schema):
+    def extract(self, data: Any, path: str, err_ctx: str) -> Any:
+        return data
+
 #-------------------------------------------------------------------------------
 # Aggregate datatypes
 #-------------------------------------------------------------------------------
