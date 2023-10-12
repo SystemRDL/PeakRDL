@@ -113,6 +113,7 @@ Base Datatypes
 .. autoclass:: peakrdl.config.schema.DateTime
 .. autoclass:: peakrdl.config.schema.Date
 .. autoclass:: peakrdl.config.schema.Time
+.. autoclass:: peakrdl.config.schema.AnyType
 
 Paths
 ^^^^^
@@ -123,3 +124,7 @@ Paths
 Python Objects
 ^^^^^^^^^^^^^^
 .. autoclass:: peakrdl.config.schema.PythonObjectImport
+
+Misc
+^^^^
+.. autoclass:: peakrdl.config.schema.Choice

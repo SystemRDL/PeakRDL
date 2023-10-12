@@ -26,27 +26,51 @@ class _SimpleType(Schema):
         return data
 
 class String(_SimpleType):
+    """
+    Matches a string.
+    """
     TYPE = str
 
 class Integer(_SimpleType):
+    """
+    Matches an integer.
+    """
     TYPE = int
 
 class Float(_SimpleType):
+    """
+    Matches a float.
+    """
     TYPE = float
 
 class Boolean(_SimpleType):
+    """
+    Matches a boolean.
+    """
     TYPE = bool
 
 class DateTime(_SimpleType):
+    """
+    Matches a date + time.
+    """
     TYPE = datetime.datetime # type: ignore
 
 class Date(_SimpleType):
+    """
+    Matches a date.
+    """
     TYPE = datetime.date # type: ignore
 
 class Time(_SimpleType):
+    """
+    Matches a time.
+    """
     TYPE = datetime.time
 
 class AnyType(Schema):
+    """
+    Wildcard. Matches any type.
+    """
     def extract(self, data: Any, path: str, err_ctx: str) -> Any:
         return data
 
