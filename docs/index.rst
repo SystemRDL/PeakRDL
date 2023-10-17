@@ -2,7 +2,7 @@ Introduction
 ============
 
 PeakRDL is a free and open-source control & status register (CSR) toolchain.
-This projects provides a command-line tool that unifies many aspects of register
+This project provides a command-line tool that unifies many aspects of register
 automation centered around the SystemRDL register description language.
 
 This tool can:
@@ -12,12 +12,9 @@ This tool can:
 * Generate synthesizable SystemVerilog RTL register blocks.
 * Create rich and dynamic HTML documentation.
 * Build a UVM register model abstraction layer.
+* Generate a C register abstraction header for software.
 * ... or extended this tool with your own plugins
 
-.. warning::
-
-    The PeakRDL command line tool is still in pre-production (v0.x version numbers).
-    During this time, I may decide to refactor things which could break compatibility.
 
 
 Installing
@@ -57,7 +54,8 @@ Links
     :hidden:
     :caption: Additional Exporter Docs
 
-    regblock <https://peakrdl-regblock.readthedocs.io/en/latest>
+    regblock <https://peakrdl-regblock.readthedocs.io>
+    c-header <https://peakrdl-cheader.readthedocs.io>
     ip-xact <https://peakrdl-ipxact.readthedocs.io/en/latest/exporter.html>
 
 .. toctree::

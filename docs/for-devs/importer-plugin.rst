@@ -74,23 +74,13 @@ For consistency, it is recommended to define your plugin descriptor class in a
 file named ``__peakrdl__.py`` at the root of your package.
 
 The example below shows how you would provide an entry point linkage to your
-importer's descriptor class inside your package's ``setup.py``:
+importer's descriptor class inside your package's ``pyproject.toml``:
 
-.. code-block:: python
-    :emphasize-lines: 7-11
+.. code-block:: toml
 
-    import setuptools
+    [project.entry-points."peakrdl.importers"]
+    my-importer = "my_package.__peakrdl__:MyImporterDescriptor"
 
-    setuptools.setup(
-        name="my_package",
-        packages=["my_package"],
-        # ...
-        entry_points = {
-            "peakrdl.importers": [
-                'my-importer = my_package.__peakrdl__:MyImporterDescriptor'
-            ]
-        }
-    )
 
 * ``my_package``: The name of your installable Python module
 * ``peakrdl.importers``: This is the namespace that PeakRDL will search. Any
@@ -98,8 +88,6 @@ importer's descriptor class inside your package's ``setup.py``:
   discovered.
 * ``my_package.__peakrdl__:MyImporterDescriptor``: This is the import path that
   points to your descriptor class definition
-
-For a complete example, see `PeakRDL-ipxact's setup.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/setup.py>`_.
 
 
 

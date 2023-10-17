@@ -74,23 +74,13 @@ For consistency, it is recommended to define your plugin descriptor class in a
 file named ``__peakrdl__.py`` at the root of your package.
 
 The example below shows how you would provide an entry point linkage to your
-exporter's descriptor class inside your package's ``setup.py``:
+exporter's descriptor class inside your package's ``pyproject.toml``:
 
-.. code-block:: python
-    :emphasize-lines: 7-11
+.. code-block:: toml
 
-    import setuptools
+    [project.entry-points."peakrdl.exporters"]
+    my-exporter = "my_package.__peakrdl__:MyExporterDescriptor"
 
-    setuptools.setup(
-        name="my_package",
-        packages=["my_package"],
-        # ...
-        entry_points = {
-            "peakrdl.exporters": [
-                'my-exporter = my_package.__peakrdl__:MyExporterDescriptor'
-            ]
-        }
-    )
 
 * ``my_package``: The name of your installable Python module
 * ``peakrdl.exporters``: This is the namespace that PeakRDL will search. Any
@@ -101,7 +91,7 @@ exporter's descriptor class inside your package's ``setup.py``:
 * ``my-exporter``: The lefthand side of the assignment is your exporter's
   subcommand name. This text is what is used in the command line interface.
 
-For a complete example, see `PeakRDL-ipxact's setup.py file <https://github.com/SystemRDL/PeakRDL-ipxact/blob/main/setup.py>`_.
+For a complete example, see `PeakRDL-cheader's pyproject.toml file <https://github.com/SystemRDL/PeakRDL-cheader/blob/main/pyproject.toml>`_.
 
 
 Via the PeakRDL configuration file
