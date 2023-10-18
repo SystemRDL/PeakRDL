@@ -50,6 +50,22 @@ Input: `atxmega_spi.rdl <https://github.com/SystemRDL/PeakRDL/tree/main/examples
 Result: `atxmega_uvm_pkg.sv <https://github.com/SystemRDL/PeakRDL/blob/main/examples/atxmega_spi_uvm_pkg.sv>`_
 
 
+Generate C headers for software
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: bash
+
+    peakrdl c-header atxmega_spi.rdl -o atxmega_spi.h
+
+    # .. Or with bit-fields
+    peakrdl c-header atxmega_spi.rdl -o atxmega_spi_bf.h --bitfields ltoh
+
+
+Input: `atxmega_spi.rdl <https://github.com/SystemRDL/PeakRDL/tree/main/examples/atxmega_spi.rdl>`_
+
+Result: `atxmega_spi.h <https://github.com/SystemRDL/PeakRDL/blob/main/examples/atxmega_spi.h>`_ &
+`atxmega_spi_bf.h <https://github.com/SystemRDL/PeakRDL/blob/main/examples/atxmega_spi_bf.h>`_
+
+
 Convert to IP-XACT XML
 ^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
