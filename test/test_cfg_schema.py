@@ -15,7 +15,9 @@ class TestSchema(unittest.TestCase):
             "date": schema.Date(),
             "time": schema.Time(),
             "int_array": [schema.Integer()],
-            "user_mapping": {"*": schema.Integer()}
+            "user_mapping": {"*": schema.Integer()},
+            "anything": schema.AnyType(),
+            "choice": schema.Choice(["a", "b", "c"]),
         }
 
         sch = schema.normalize(sch)
@@ -32,7 +34,9 @@ class TestSchema(unittest.TestCase):
             "user_mapping": {
                 "foo": 1,
                 "bar": 2,
-            }
+            },
+            "anything": [1, 2, "hi"],
+            "choice": "a",
         }
 
         data = sch.extract(raw_data, __file__, "testcase")
@@ -75,6 +79,12 @@ class TestSchema(unittest.TestCase):
             with self.assertRaises(schema.SchemaException):
                 sch.extract(raw_data, __file__, "testcase")
 
+        with self.subTest("choice"):
+            sch = schema.Choice("b")
+            raw_data = "hi"
+            with self.assertRaises(schema.SchemaException):
+                sch.extract(raw_data, __file__, "testcase")
+
     def test_paths(self):
         this_dir = os.path.dirname(__file__)
 
@@ -103,6 +113,15 @@ class TestSchema(unittest.TestCase):
             self.assertEqual(
                 data,
                 os.path.abspath(os.path.join(this_dir, "run.sh"))
+            )
+
+        with self.subTest("abspath"):
+            sch = schema.Path(shall_exist=False)
+            raw_data = "/foo/bar"
+            data = sch.extract(raw_data, __file__, "testcase")
+            self.assertEqual(
+                data,
+                raw_data
             )
 
     def test_path_errors(self):

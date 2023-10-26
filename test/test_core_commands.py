@@ -25,6 +25,48 @@ class TestCoreCommands(PeakRDLTestcase):
         ])
         self.assertEqual(captured.out, expected)
 
+    def test_dump_fields(self):
+        self.run_commandline([
+            'dump',
+            os.path.join(self.testdata_dir, "structural.rdl"),
+            "-F"
+        ])
+        captured = self.capsys.readouterr()
+        expected = "\n".join([
+            "0x0000-0x0003: regblock.r0",
+            "\t[7:0] a",
+            "\t[8:8] b",
+            "\t[31:31] c",
+            "0x0010-0x006f: regblock.r1[2][3][4]",
+            "\t[7:0] a",
+            "\t[8:8] b",
+            "\t[31:31] c",
+            "0x1000-0x1003: regblock.r2",
+            "\t[7:0] a",
+            "\t[8:8] b",
+            "\t[31:31] c",
+            "0x2000-0x200f: regblock.sub2[2].r1[4]",
+            "\t[7:4] x",
+            "0x2010-0x2013: regblock.sub2[2].sub[2].r1",
+            "\t[7:4] x",
+            "0x2014-0x201b: regblock.sub2[2].sub[2].r2[2]",
+            "\t[7:4] x",
+            "0x201c-0x201f: regblock.sub2[2].sub[2].r3",
+            "\t[7:4] x",
+            "0x2030-0x203f: regblock.sub2[2].r2[4]",
+            "\t[7:4] x",
+            "0x2080-0x2083: regblock.r3",
+            "\t[7:4] x",
+            "0x3000-0x3003: regblock.rw_reg",
+            "\t[19:12] f1",
+            "\t[30:20] f2",
+            "0x3004-0x3007: regblock.rw_reg_lsb0",
+            "\t[12:19] f1",
+            "\t[20:30] f2",
+            "",
+        ])
+        self.assertEqual(captured.out, expected)
+
     def test_dump_unroll(self):
         self.run_commandline([
             'dump',
