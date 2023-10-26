@@ -61,6 +61,7 @@ class TestBasics(PeakRDLTestcase):
         ], expects_error=True)
 
     def test_f_argfile(self):
+        os.environ["PEAKRDL_TOP_TEST_ENVVAR"] = "nested"
         self.run_commandline([
             '-f', os.path.join(self.testdata_dir, "dump_nested.f"),
         ])

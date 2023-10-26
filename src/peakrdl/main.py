@@ -2,7 +2,8 @@ import argparse
 import sys
 import os
 import shlex
-from typing import TYPE_CHECKING, List, Dict, Optional, Set
+import re
+from typing import TYPE_CHECKING, List, Dict, Optional, Set, Match
 
 from systemrdl import RDLCompileError
 
@@ -89,9 +90,26 @@ def expand_file_args(argv: List[str], _pathlist: Optional[Set[str]] = None) -> L
     return new_argv
 
 
+def expand_arg_vars(argv: List[str]) -> List[str]:
+    """
+    Expand environment variables in args
+    """
+    pattern = re.compile(r"\$(\w+|\{[^}]*\})")
+    def repl(m: Match) -> str:
+        k = m.group(1)
+        if k.startswith("{") and k.endswith("}"):
+            k = k[1:-1]
+
+        v = os.environ.get(k, m.group(0))
+        return v
+
+    return [pattern.sub(repl, arg) for arg in argv]
+
+
 def main() -> None:
     # manually expand any -f argfiles first
     argv = expand_file_args(sys.argv[1:])
+    argv = expand_arg_vars(argv)
 
     cfg = load_cfg(argv)
 
