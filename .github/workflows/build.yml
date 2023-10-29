@@ -173,6 +173,9 @@ jobs:
       - build
 
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
 
     # Only publish when a GitHub Release is created.
     if: github.event_name == 'release'
@@ -183,6 +186,3 @@ jobs:
           path: dist
 
       - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.pypi_password }}
