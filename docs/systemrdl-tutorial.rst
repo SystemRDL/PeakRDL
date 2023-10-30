@@ -275,8 +275,7 @@ to learn more!
     // An up-counting counter
     field counter_field {
         sw = r;
-        counter; // is a counter
-        incr; // has an increment control
+        counter; // is a counter that infers an increment control hardware input signal
     };
 
     // Field that is set by hardware, and cleard by software read
