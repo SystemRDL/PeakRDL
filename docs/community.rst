@@ -5,7 +5,7 @@ Community Plugins
 
 Below is a list of other PeakRDL plugins created by community members.
 
-If you've made your own plugin, feel free to [open a PR to add yours](https://github.com/SystemRDL/PeakRDL/edit/main/docs/community.rst) to this list.
+If you've made your own plugin, feel free to `open a PR to add yours <https://github.com/SystemRDL/PeakRDL/edit/main/docs/community.rst>`_ to this list.
 
 
 
