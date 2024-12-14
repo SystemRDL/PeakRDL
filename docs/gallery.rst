@@ -101,4 +101,4 @@ Run your own custom command
 PeakRDL can be extended with additional user-defined commands.
 See more details here: :ref:`exporter-plugin`
 
-Or, check out the various `community-contributed plugins <https://github.com/SystemRDL/.github/blob/main/community_plugins.md>`_ already available.
+Or, check out the various :ref:`community-plugins` already available.

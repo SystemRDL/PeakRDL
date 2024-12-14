@@ -16,7 +16,8 @@ This tool can:
 * Import & export IP-XACT XML.
 * Create rich and dynamic HTML documentation.
 * Build a UVM register model abstraction layer.
-* ... or extended this tool with your own plugins
+* Be extended by :ref:`exporter-plugin` plugin.
+* ... or use one of the many :ref:`community-plugins`
 
 
 
@@ -52,6 +53,7 @@ Links
     processing-input
     configuring
     licensing
+    community
 
 .. toctree::
     :hidden:
