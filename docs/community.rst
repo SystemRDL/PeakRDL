@@ -5,7 +5,7 @@ Community Plugins
 
 Below is a list of other PeakRDL plugins created by community members.
 
-If you've made your own plugin, feel free to `open a PR to add yours <https://github.com/SystemRDL/PeakRDL/edit/main/docs/community.rst>`_ to this list.
+If you've made your own plugin, feel free to `open a pull request to add yours <https://github.com/SystemRDL/PeakRDL/edit/main/docs/community.rst>`_ to this list.
 
 
 
@@ -22,9 +22,9 @@ Test/Software Abstraction Layers
     *   - `PeakRDL-beam <https://peakrdl-beam.readthedocs.io/en/latest/>`_
         - `João Henrique Ferreira de Freitas <https://github.com/joaohf>`_
         - Generate a register abstraction layer for supported BEAM languages
-          (Erlang and Elixir) a SystemRDL definition.
+          (Erlang and Elixir) from a SystemRDL definition.
 
-    *   - `peakRDL-cocotb-ralgen <https://dyumnin.github.io/cocotb-ralgen>`_
+    *   - `PeakRDL-cocotb-ralgen <https://dyumnin.github.io/cocotb-ralgen>`_
         - `Dyumnin Semiconductor <https://github.com/dyumnin>`_
         - A SystemRDL to raltest converter for cocotb
 

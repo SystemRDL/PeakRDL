@@ -20,7 +20,9 @@ This tool can:
 * Import & export IP-XACT XML.
 * Create rich and dynamic HTML documentation.
 * Build a UVM register model abstraction layer.
-* ... or extended this tool with your own plugins
+* Extend this tool with your own plugin.
+* ... or use one of the many [community plugins](https://peakrdl.readthedocs.io/en/latest/community.html)
+
 
 ## Documentation
 See the [PeakRDL Documentation](http://peakrdl.readthedocs.io) for more details.
