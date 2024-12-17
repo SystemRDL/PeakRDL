@@ -217,7 +217,7 @@ jobs:
       - build-peakrdl
 
     runs-on: ubuntu-latest
-    environment: release
+    environment: release-peakrdl
     permissions:
       id-token: write
 
@@ -240,7 +240,7 @@ jobs:
       - build-peakrdl-cli
 
     runs-on: ubuntu-latest
-    environment: release
+    environment: release-peakrdl-cli
     permissions:
       id-token: write
 
