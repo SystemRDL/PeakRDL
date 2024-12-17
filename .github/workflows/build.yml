@@ -12,8 +12,8 @@ on:
       - published
 
 jobs:
-  build:
-    name: Build
+  build-peakrdl-cli:
+    name: Build peakrdl-cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,18 +30,44 @@ jobs:
       - name: Build
         run: |
           python -m build peakrdl-cli -o dist/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-peakrdl-cli
+          path: |
+            dist/*.tar.gz
+            dist/*.whl
+
+  build-peakrdl:
+    name: Build peakrdl
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        name: Install Python
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install build
+
+      - name: Build
+        run: |
           python -m build peakrdl -o dist/
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: dist-peakrdl
           path: |
             dist/*.tar.gz
             dist/*.whl
 #-------------------------------------------------------------------------------
   test:
     needs:
-      - build
+      - build-peakrdl-cli
+      - build-peakrdl
     strategy:
       matrix:
         python-version:
@@ -77,7 +103,12 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-peakrdl
+          path: dist
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-peakrdl-cli
           path: dist
 
       - name: Install dependencies
@@ -122,7 +153,7 @@ jobs:
 #-------------------------------------------------------------------------------
   lint:
     needs:
-      - build
+      - build-peakrdl-cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -133,7 +164,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-peakrdl-cli
           path: dist
 
       - name: Install dependencies
@@ -151,7 +182,7 @@ jobs:
 #-------------------------------------------------------------------------------
   mypy:
     needs:
-      - build
+      - build-peakrdl-cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -162,7 +193,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-peakrdl-cli
           path: dist
 
       - name: Install dependencies
@@ -178,11 +209,12 @@ jobs:
           mypy --config-file test/mypy.ini peakrdl-cli/src/peakrdl
 
 #-------------------------------------------------------------------------------
-  deploy:
+  deploy-peakrdl:
     needs:
       - test
       - lint
       - mypy
+      - build-peakrdl
 
     runs-on: ubuntu-latest
     environment: release
@@ -194,7 +226,30 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: dist-peakrdl
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+
+  deploy-peakrdl-cli:
+    needs:
+      - test
+      - lint
+      - mypy
+      - build-peakrdl-cli
+
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+
+    # Only publish when a GitHub Release is created.
+    if: github.event_name == 'release'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-peakrdl-cli
           path: dist
 
       - uses: pypa/gh-action-pypi-publish@release/v1
