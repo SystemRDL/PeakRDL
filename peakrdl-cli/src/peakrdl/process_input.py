@@ -6,7 +6,7 @@ from systemrdl.messages import FileSourceRef
 
 if TYPE_CHECKING:
     import argparse
-    from typing import Sequence
+    from typing import Sequence, Optional
     from systemrdl import RDLCompiler, AddrmapNode
     from .importer import Importer
 
@@ -73,6 +73,7 @@ def parse_parameters(rdlc: 'RDLCompiler', parameter_options: List[str]) -> Dict[
         m = re.fullmatch(r"(\w+)=(.+)", raw_param)
         if not m:
             rdlc.msg.fatal(f"Invalid parameter argument: {raw_param}")
+            raise ValueError
 
         p_name = m.group(1)
         try:
@@ -89,6 +90,7 @@ def parse_defines(rdlc: 'RDLCompiler', define_options: List[str]) -> Dict[str, s
         m = re.fullmatch(r"(\w+)(?:=(.+))?", raw_def)
         if not m:
             rdlc.msg.fatal(f"Invalid define argument: {raw_def}")
+            raise ValueError
 
         k = m.group(1)
         v = m.group(2) or ""
@@ -116,12 +118,11 @@ def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_fi
 
             # Search which importer to use by extension first
             importer_candidates = [] # type: List[Importer]
-            for importer in importers:
-                if ext in importer.file_extensions:
-                    importer_candidates.append(importer)
+            for imp in importers:
+                if ext in imp.file_extensions:
+                    importer_candidates.append(imp)
 
             # Do 2nd pass if needed
-            importer = None
             if len(importer_candidates) == 1:
                 importer = importer_candidates[0]
             elif len(importer_candidates) > 1:
@@ -131,12 +132,17 @@ def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_fi
                     if importer_candidate.is_compatible(file):
                         importer = importer_candidate
                         break
+                else:
+                    importer = None
+            else:
+                importer = None
 
             if not importer:
                 rdlc.msg.fatal(
                     "Unknown file type. Could not find any importers capable of reading this file.",
                     FileSourceRef(file)
                 )
+                raise ValueError
 
             importer.do_import(rdlc, options, file)
 

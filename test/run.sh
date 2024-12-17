@@ -1,31 +1,27 @@
 #!/bin/bash
 
 set -e
-
-this_dir="$( cd "$(dirname "$0")" ; pwd -P )"
+cd "$(dirname "$0")"
 
 # Initialize venv
-venv_bin=$this_dir/.venv/bin
-python3 -m venv $this_dir/.venv
-source $venv_bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 
 # Install test dependencies
-python -m pip install -U pip setuptools wheel
-python -m pip install -U pytest pytest-cov coverage pylint mypy
+python -m pip install -r requirements.txt
 
-# Install dut
-cd $this_dir/../
-python -m pip install .
-cd $this_dir
+# Install CLI first, then bundle toolchain pkg
+python -m pip install ../peakrdl-cli/
+python -m pip install ../peakrdl/
 
 # Run unit tests while collecting coverage
 pytest --cov=peakrdl
 
 # Generate coverage report
-coverage html -i -d $this_dir/htmlcov
+coverage html -i -d htmlcov
 
 # Run lint
-pylint --rcfile $this_dir/pylint.rc ../src/peakrdl
+pylint --rcfile pylint.rc ../peakrdl-cli/src/peakrdl
 
 # Run static type checking
-mypy $this_dir/../src/peakrdl
+mypy ../peakrdl-cli/src/peakrdl

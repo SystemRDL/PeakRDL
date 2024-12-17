@@ -100,6 +100,7 @@ def load_cfg(argv: List[str]) -> AppConfig:
     if path is None:
         # Nope. Still no config file. Provide empty data
         raw_data = {}
+        path = ""
     else:
         if not os.path.isfile(path):
             print(f"error: invalid config file path: {path}", file=sys.stderr)

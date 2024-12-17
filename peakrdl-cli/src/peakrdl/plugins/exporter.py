@@ -42,12 +42,17 @@ def get_exporter_plugins(cfg: 'AppConfig') -> List[ExporterSubcommandPlugin]:
     # Get exporter plugins from entry-points
     for ep, dist in get_entry_points("peakrdl.exporters"):
         cls = ep.load()
-        dist_name = get_name_from_dist(dist)
+        if dist:
+            dist_name = get_name_from_dist(dist)
+            dist_version = dist.version
+        else:
+            dist_name = None
+            dist_version = None
 
         if issubclass(cls, ExporterSubcommandPlugin):
             # Override name - always use entry point's name
             cls.name = ep.name
-            exporter = cls(dist_name=dist_name, dist_version=dist.version)
+            exporter = cls(dist_name=dist_name, dist_version=dist_version)
         else:
             raise RuntimeError(f"Exporter class {cls} is expected to be extended from peakrdl.plugins.exporter.ExporterSubcommandPlugin")
         exporters.append(exporter)

@@ -156,38 +156,6 @@ class TestCoreCommands(PeakRDLTestcase):
         ])
         self.assertEqual(captured.out, expected)
 
-    def test_uvm(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'uvm',
-            os.path.join(self.testdata_dir, "structural.rdl"),
-            '-o', os.path.join(path, "out.sv"),
-        ])
-
-    def test_regblock(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'regblock',
-            os.path.join(self.testdata_dir, "structural.rdl"),
-            '-o', path,
-        ])
-
-    def test_ipxact(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'ip-xact',
-            os.path.join(self.testdata_dir, "structural.rdl"),
-            '-o', os.path.join(path, "out.xml"),
-        ])
-
-    def test_html(self):
-        path = self.get_output_dir()
-        self.run_commandline([
-            'html',
-            os.path.join(self.testdata_dir, "structural.rdl"),
-            '-o', path,
-        ])
-
     def test_preprocess(self):
         path = self.get_output_dir()
         self.run_commandline([

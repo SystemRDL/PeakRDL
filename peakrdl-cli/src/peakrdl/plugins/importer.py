@@ -42,12 +42,17 @@ def get_importer_plugins(cfg: 'AppConfig') -> List[ImporterPlugin]:
     # Get importer plugins from entry-points
     for ep, dist in get_entry_points("peakrdl.importers"):
         cls = ep.load()
-        dist_name = get_name_from_dist(dist)
+        if dist:
+            dist_name = get_name_from_dist(dist)
+            dist_version = dist.version
+        else:
+            dist_name = None
+            dist_version = None
 
         if issubclass(cls, ImporterPlugin):
             # Override name - always use entry point's name
             cls.name = ep.name
-            importer = cls(dist_name=dist_name, dist_version=dist.version)
+            importer = cls(dist_name=dist_name, dist_version=dist_version)
         else:
             raise RuntimeError(f"Importer class {cls} is expected to be extended from peakrdl.plugins.importer.ImporterPlugin")
         importers.append(importer)
