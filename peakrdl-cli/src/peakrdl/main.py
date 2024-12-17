@@ -3,6 +3,7 @@ import sys
 import os
 import shlex
 import re
+import inspect
 from typing import TYPE_CHECKING, List, Dict, Optional, Set, Match
 
 from systemrdl import RDLCompileError
@@ -132,7 +133,10 @@ def main() -> None:
     sc_dict = {} # type: Dict[str, Subcommand]
     for sc in subcommands:
         if sc.name in sc_dict:
-            raise RuntimeError(f"More than one exporter plugin was registered with the same name '{sc.name}': \n\t{sc_dict[sc.name]}\n\t{sc}")
+            other_sc = sc_dict[sc.name]
+            sc_loc = f"{inspect.getfile(sc.__class__)}:{sc.__class__.__name__}"
+            other_sc_loc = f"{inspect.getfile(other_sc.__class__)}:{other_sc.__class__.__name__}"
+            raise RuntimeError(f"More than one exporter plugin was registered with the same name '{sc.name}': \n\t{other_sc_loc}\n\t{sc_loc}")
         sc_dict[sc.name] = sc
 
     # Initialize top-level arg parser
