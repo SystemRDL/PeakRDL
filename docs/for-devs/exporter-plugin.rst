@@ -101,7 +101,7 @@ An alternative method that avoids having to make your own pip-installable
 package is to specify the plugin import entry point via the PeakRDL
 configuration file.
 
-For example, if your plugin descriptor was deifned in a Python file located in
+For example, if your plugin descriptor was defined in a Python file located in
 ``/opt/my_peakrdl_plugins/my_exporter.py``, the following configuration would
 instruct PeakRDL to load it:
 

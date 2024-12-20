@@ -130,7 +130,7 @@ class ExporterSubcommand(Subcommand):
             Not all exporter configuration options are appropriate as command-line arguments.
             For options that will likely remain static for a given user/organization,
             consider using the PeakRDL TOML configuration mechanism via the
-            ``cft_schema`` and ``cfg`` class members.
+            ``cfg_schema`` and ``cfg`` class members.
 
         Parameters
         ----------

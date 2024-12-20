@@ -15,8 +15,8 @@ For more details, see the individual command's ``--help`` flag.
     peakrdl <subcommand> --help
 
 
-Generate syntesizable SystemVerilog RTL
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Generate synthesizable SystemVerilog RTL
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. code-block:: bash
 
     peakrdl regblock atxmega_spi.rdl -o regblock/ --cpuif apb3-flat

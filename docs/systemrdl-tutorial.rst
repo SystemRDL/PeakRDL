@@ -104,7 +104,7 @@ Specifying the position of an instance
 
 Fields
 ^^^^^^
-If left unpecified, the bit-position of a field is allocated sequentially.
+If left unspecified, the bit-position of a field is allocated sequentially.
 Otherwise, you can explicitly define the field position:
 
 .. code-block:: systemrdl
@@ -122,7 +122,7 @@ reset assignment operator:
     my_field_type field_1[7:0] = 42; // field has a reset value of 42
 
 
-Addressible Components
+Addressable Components
 ^^^^^^^^^^^^^^^^^^^^^^
 ``reg``, ``regfile``, ``addrmap`` and ``mem`` components all get allocated to
 an address in the register map.

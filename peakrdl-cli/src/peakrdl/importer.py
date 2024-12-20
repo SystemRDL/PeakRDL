@@ -42,7 +42,7 @@ class Importer:
 
         .. note::
 
-            This should not attempt to exaustively validate the file's
+            This should not attempt to exhaustively validate the file's
             correctness.
 
             Instead, it is recommended to open the file, and perform a low-cost

@@ -11,7 +11,7 @@ Specifying a configuration file
 -------------------------------
 
 The PeakRDL configuration file can be explicitly specified using the
-``--peakrdl-cfg`` option. Otherwise, Peakrdl searches for a configuration file
+``--peakrdl-cfg`` option. Otherwise, PeakRDL searches for a configuration file
 in the following order, and uses the first one it finds:
 
 1. ``peakrdl.toml`` in the current working directory
@@ -76,4 +76,4 @@ For example:
     user_template_dir = "../path/to/html_templates"
     extra_doc_properties = ["hw", "my_udp"]
 
-See the plugin-specific reference documents for more details onhow they can be configured.
+See the plugin-specific reference documents for more details on how they can be configured.

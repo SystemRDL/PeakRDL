@@ -16,7 +16,7 @@ authors = [
 ]
 description = "Command-line tool for control/status register automation and code generation."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = {text = "GPLv3"}
 keywords = [
     "SystemRDL", "PeakRDL", "CSR", "compiler", "tool", "registers", "generator",
     "C", "header", "software", "Verilog", "SystemVerilog", "register abstraction layer",
