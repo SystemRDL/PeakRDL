@@ -1,0 +1,226 @@
+SystemRDL Style Guide
+=====================
+Style guides can be a helpful way to ensure code readability and build common
+best-practices. These are not hard rules, but rather they are recommendations
+to follow so that your SystemRDL is readable and beautiful to everyone that
+comes across it. Since all style guides are inherently opinionated, it is
+important not to take them too seriously. It is ok to break from the style
+guide if it will improve readability and consistency.
+
+
+
+Indentation is 4 spaces per level
+---------------------------------
+
+Do not use tabs. Use spaces for indentation.
+Configure your text editor to emit spaces when you press the tab key.
+
+When to indent
+--------------
+Always add a level of indentation for component contents, enum contents,
+parameter lists, or anything else between braces: ``{``, ``}``, ``(``, ``)``,
+
+Keep indentation consistent
+---------------------------
+
+Yes:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+        sw = rw;
+        hw = r;
+    } my_field;
+
+No:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+          sw = rw;
+    hw = r;
+    } my_field;
+
+
+Braces and Parentheses
+----------------------
+The opening brace ``{`` must be on the same line as the statement it belongs to.
+The closing brace ``}`` must be on a line of its own along with its instance
+name if appropriate.
+
+
+Yes:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+        sw = rw;
+        hw = r;
+    } my_field;
+
+No:
+
+.. code:: systemrdl
+
+    field
+    {
+        desc = "My field";
+        sw = rw;
+        hw = r;
+    }
+    my_field;
+
+If a component has a parameter list, parentheses use the same convention:
+
+.. code:: systemrdl
+
+    field my_field #(
+        longint unsigned MY_PARAM = 1,
+        longint unsigned OTHER_PARAM = 2
+    ){
+        desc = "My field";
+        sw = rw;
+        hw = r;
+    };
+
+    my_field #(
+        .MY_PARAM(2),
+        .OTHER_PARAM(3),
+    ) inst;
+
+
+Where to add spaces
+-------------------
+
+On both sides of any assignment or expression operators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes:
+
+.. code:: systemrdl
+
+    reset = 4 + MY_PARAM / 2;
+
+No:
+
+.. code:: systemrdl
+
+    reset=4+MY_PARAM/2;
+
+Before and after open/close braces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Yes:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+    } my_field;
+
+No:
+
+.. code:: systemrdl
+
+    field{
+        desc = "My field";
+    }my_field;
+
+Exception is if the next item after a closing brace is a semicolon: ``};``
+
+
+Only one property assignment per-line
+-------------------------------------
+
+In most cases, keep each property assignment on its own distinct line.
+Since properties ``sw`` and ``hw``, are nearly always used together, it is
+acceptable to stack them on the same line.
+
+Yes:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+        sw = r;
+        hw = na;
+        counter;
+        onread = rclr;
+    } my_field;
+
+No:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+        sw = r; hw = na; counter; onread = rclr;
+    } my_field;
+
+
+Acceptable:
+
+.. code:: systemrdl
+
+    field {
+        desc = "My field";
+        sw = r; hw = na;
+        counter;
+        onread = rclr;
+    } my_field;
+
+
+Component type and instance names are lowercase
+-----------------------------------------------
+There is no need to yell.
+
+Yes:
+
+.. code:: systemrdl
+
+    field my_field {
+        ...
+    };
+
+    my_field inst;
+
+No:
+
+.. code:: systemrdl
+
+    field MY_FIELD {
+        ...
+    };
+
+    MY_FIELD INST;
+
+
+
+Parameters and Verilog-style macros are uppercase
+-------------------------------------------------
+Constants should be in ALL_CAPS
+
+
+Long descriptions
+-----------------
+
+Break long descriptions into multiple lines, indented at the same level as the
+scope it is in.
+Start and end quotation marks use the same rules as braces.
+
+.. code:: systemrdl
+
+    field {
+        desc = "My short description";
+    } my_field_a;
+
+    field {
+        desc = "
+        This is a long description.
+
+        It requires multiple lines that are all indented at the same level.
+        ";
+    } my_field_b;

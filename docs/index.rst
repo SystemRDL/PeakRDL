@@ -49,11 +49,19 @@ Links
 
     self
     gallery
-    systemrdl-tutorial
     processing-input
     configuring
     licensing
     community
+
+.. toctree::
+    :hidden:
+    :caption: About SystemRDL
+
+    systemrdl-tutorial
+    style-guide
+    best-practices
+
 
 .. toctree::
     :hidden:
