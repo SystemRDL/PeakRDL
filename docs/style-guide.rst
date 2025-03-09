@@ -23,7 +23,7 @@ parameter lists, or anything else between braces: ``{``, ``}``, ``(``, ``)``,
 Keep indentation consistent
 ---------------------------
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
@@ -33,7 +33,7 @@ Yes:
         hw = r;
     } my_field;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -51,7 +51,7 @@ The closing brace ``}`` must be on a line of its own along with its instance
 name if appropriate.
 
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
@@ -61,7 +61,7 @@ Yes:
         hw = r;
     } my_field;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -74,6 +74,8 @@ No:
     my_field;
 
 If a component has a parameter list, parentheses use the same convention:
+
+|:thumbsup:|
 
 .. code:: systemrdl
 
@@ -98,13 +100,13 @@ Where to add spaces
 On both sides of any assignment or expression operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
     reset = 4 + MY_PARAM / 2;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -113,7 +115,7 @@ No:
 Before and after open/close braces
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
@@ -121,7 +123,7 @@ Yes:
         desc = "My field";
     } my_field;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -139,7 +141,7 @@ In most cases, keep each property assignment on its own distinct line.
 Since properties ``sw`` and ``hw``, are nearly always used together, it is
 acceptable to stack them on the same line.
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
@@ -151,7 +153,7 @@ Yes:
         onread = rclr;
     } my_field;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -161,7 +163,7 @@ No:
     } my_field;
 
 
-Acceptable:
+|:thumbsup:| Acceptable:
 
 .. code:: systemrdl
 
@@ -177,7 +179,7 @@ Component type and instance names are lowercase
 -----------------------------------------------
 There is no need to yell.
 
-Yes:
+|:thumbsup:| Yes:
 
 .. code:: systemrdl
 
@@ -187,7 +189,7 @@ Yes:
 
     my_field inst;
 
-No:
+|:thumbsdown:| No:
 
 .. code:: systemrdl
 
@@ -210,6 +212,8 @@ Long descriptions
 Break long descriptions into multiple lines, indented at the same level as the
 scope it is in.
 Start and end quotation marks use the same rules as braces.
+
+|:thumbsup:|
 
 .. code:: systemrdl
 

@@ -7,7 +7,7 @@ Only use the global lexical scope if you want to declare common components that
 you intend to use globally. This avoids polluting the global namespace and
 prevents unexpected component name collisions.
 
-Bad:
+|:thumbsdown:| Bad:
 
 .. code:: systemrdl
 
@@ -24,7 +24,7 @@ Bad:
         my_status_reg status;
     };
 
-Good:
+|:thumbsup:| Good:
 
 .. code:: systemrdl
 
