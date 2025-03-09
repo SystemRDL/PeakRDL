@@ -19,25 +19,25 @@ class Subcommand:
     """
 
     # Subcommand name
-    name = None # type: str
+    name: str
 
     #: A brief one-line description of the exporter command.
-    short_desc = None # type: str
+    short_desc: str
 
     #: Longer-form description.
     #: If left as None, inherits short_desc
-    long_desc = None # type: Optional[str]
+    long_desc: Optional[str] = None
 
     #: Schema for additional organization-specific configuration options
     #: specified by a 'peakrdl.toml' file loaded at startup.
     #:
     #: For more details, see :ref:`cfg_schema`
-    cfg_schema = {} # type: Dict[str, Any]
+    cfg_schema: Dict[str, Any] = {}
 
     def __init__(self) -> None:
         #: Resolved configuration data that was extracted from the PeakRDL TOML,
         #: and validated.
-        self.cfg = {} # type: Dict[str, Any]
+        self.cfg: Dict[str, Any] = {}
 
     def _load_cfg(self, cfg: AppConfig) -> None:
         self.cfg = cfg.get_namepsace(self.name, schema.normalize(self.cfg_schema))
@@ -99,7 +99,7 @@ class ExporterSubcommand(Subcommand):
     #: List of ``systemrdl.udp.UDPDefinition`` classes that this subcommand
     #: provides. Internally, each of these definitions are registered with the
     #: compiler as soft UDPs via ``RDLCompiler.register_udp()``
-    udp_definitions = [] # type: List[Type[UDPDefinition]]
+    udp_definitions: List[Type["UDPDefinition"]] = []
 
     def add_arguments(self, parser: 'argparse._ActionsContainer', importers: 'List[ImporterPlugin]') -> None:
         compiler_arg_group = parser.add_argument_group("compilation args")

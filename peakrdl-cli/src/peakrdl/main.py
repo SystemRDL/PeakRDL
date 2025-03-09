@@ -4,7 +4,7 @@ import os
 import shlex
 import re
 import inspect
-from typing import TYPE_CHECKING, List, Dict, Optional, Set, Match
+from typing import List, Dict, Optional, Set, Match, NoReturn
 
 from systemrdl import RDLCompileError
 
@@ -15,10 +15,7 @@ from .plugins.importer import get_importer_plugins
 from .cmd.dump import Dump
 from .cmd.list_globals import ListGlobals
 from .cmd.preprocess import Preprocess
-
-
-if TYPE_CHECKING:
-    from .subcommand import Subcommand
+from .subcommand import Subcommand
 
 
 DESCRIPTION = """
@@ -32,7 +29,7 @@ For more documentation, visit https://peakrdl.readthedocs.io
 """
 
 class SubcommandHelpFormatter(argparse.RawDescriptionHelpFormatter):
-    def _format_action(self, action): # type: ignore
+    def _format_action(self, action) -> str: # type: ignore
         parts = super(argparse.RawDescriptionHelpFormatter, self)._format_action(action)
         if action.nargs == argparse.PARSER:
             parts = "\n".join(parts.split("\n")[1:])
@@ -40,9 +37,9 @@ class SubcommandHelpFormatter(argparse.RawDescriptionHelpFormatter):
 
 
 class ReportPluginsImpl(argparse.Action):
-    CFG = None # type: AppConfig
+    CFG: AppConfig
 
-    def __call__ (self, parser, namespace, values, option_string = None): # type: ignore
+    def __call__ (self, parser, namespace, values, option_string = None) -> NoReturn: # type: ignore
         exporters = get_exporter_plugins(self.CFG)
         importers = get_importer_plugins(self.CFG)
 
@@ -120,17 +117,17 @@ def main() -> None:
         importer._load_cfg(cfg)
 
     # Collect all subcommands
-    subcommands = [
+    subcommands: List[Subcommand] = [
         Dump(),
         ListGlobals(),
         Preprocess(),
-    ] # type: List[Subcommand]
+    ]
     subcommands += get_exporter_plugins(cfg)
     for subcommand in subcommands:
         subcommand._load_cfg(cfg)
 
     # Check for duplicate subcommands
-    sc_dict = {} # type: Dict[str, Subcommand]
+    sc_dict: Dict[str, Subcommand] = {}
     for sc in subcommands:
         if sc.name in sc_dict:
             other_sc = sc_dict[sc.name]

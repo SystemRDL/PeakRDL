@@ -1,32 +1,31 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Dict, Any
 
 from .config import schema
 from .config.loader import AppConfig
 
 if TYPE_CHECKING:
-    from typing import List, Dict, Any
     import argparse
     from systemrdl import RDLCompiler
 
 class Importer:
     # Importer name
-    name = None # type: str
+    name: str
 
     #: A list of one or more file extensions the importer expects to support.
     #: This is used as a rough first-pass method to identify which
     #: importer is appropriate for a given file type.
-    file_extensions = [] # type: List[str]
+    file_extensions: List[str] = []
 
     #: Schema for additional organization-specific configuration options
     #: specified by a 'peakrdl.toml' file loaded at startup
     #:
     #: For more details, see :ref:`cfg_schema`
-    cfg_schema = {} # type: Dict[str, Any]
+    cfg_schema: Dict[str, Any] = {}
 
     def __init__(self) -> None:
         #: Resolved configuration data that was extracted from the PeakRDL TOML,
         #: and validated.
-        self.cfg = {} # type: Dict[str, Any]
+        self.cfg: Dict[str, Any] = {}
 
     def _load_cfg(self, cfg: AppConfig) -> None:
         self.cfg = cfg.get_namepsace(self.name, schema.normalize(self.cfg_schema))

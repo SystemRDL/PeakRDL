@@ -19,7 +19,7 @@ RawSchema = Union[Schema, list, dict]
 # Base TOML datatypes
 #-------------------------------------------------------------------------------
 class _SimpleType(Schema):
-    TYPE = object
+    TYPE: Any
     def extract(self, data: Any, path: str, err_ctx: str) -> Any:
         if not isinstance(data, self.TYPE):
             raise SchemaException(f"{err_ctx}: Expected {self.TYPE.__name__}. Got {type(data).__name__}")
@@ -53,13 +53,13 @@ class DateTime(_SimpleType):
     """
     Matches a date + time.
     """
-    TYPE = datetime.datetime # type: ignore
+    TYPE = datetime.datetime
 
 class Date(_SimpleType):
     """
     Matches a date.
     """
-    TYPE = datetime.date # type: ignore
+    TYPE = datetime.date
 
 class Time(_SimpleType):
     """
@@ -112,7 +112,7 @@ class FixedMapping(Schema):
         if not isinstance(data, dict):
             raise SchemaException(f"{err_ctx}: Expected mapping. Got {type(data).__name__}")
 
-        mapping = {} # type: Dict[str, Any]
+        mapping: Dict[str, Any] = {}
         for key, schema in self.schema.items():
             if key not in data:
                 # Not specified. Assign default

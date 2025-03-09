@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Dict, Any
+from typing import TYPE_CHECKING, List, Dict, Any, Sequence
 import re
 import os
 
@@ -6,7 +6,6 @@ from systemrdl.messages import FileSourceRef
 
 if TYPE_CHECKING:
     import argparse
-    from typing import Sequence, Optional
     from systemrdl import RDLCompiler, AddrmapNode
     from .importer import Importer
 
@@ -117,7 +116,7 @@ def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_fi
             # Is foreign input file.
 
             # Search which importer to use by extension first
-            importer_candidates = [] # type: List[Importer]
+            importer_candidates: List["Importer"] = []
             for imp in importers:
                 if ext in imp.file_extensions:
                     importer_candidates.append(imp)
