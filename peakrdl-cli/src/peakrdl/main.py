@@ -104,12 +104,32 @@ def expand_arg_vars(argv: List[str]) -> List[str]:
     return [pattern.sub(repl, arg) for arg in argv]
 
 
+def get_peakrdl_cfg_arg(argv: List[str]) -> Optional[str]:
+    # lazy-parse argv to see if user provided a config file explicitly
+    path = None
+    argv_iter = iter(argv)
+    for arg in argv_iter:
+        if arg == "--peakrdl-cfg":
+            try:
+                path = next(argv_iter)
+            except StopIteration:
+                print("error: argument --peakrdl-cfg: expected FILE", file=sys.stderr)
+                sys.exit(1)
+            break
+    return path
+
+
 def main() -> None:
     # manually expand any -f argfiles first
     argv = expand_file_args(sys.argv[1:])
     argv = expand_arg_vars(argv)
 
-    cfg = load_cfg(argv)
+    peakrdl_cfg_path = get_peakrdl_cfg_arg(argv)
+    try:
+        cfg = load_cfg(peakrdl_cfg_path)
+    except ValueError as e:
+        print(e.args[0], file=sys.stderr)
+        sys.exit(1)
 
     # Collect all importers and initialize them with the config
     importers = get_importer_plugins(cfg)

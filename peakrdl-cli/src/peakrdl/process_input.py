@@ -6,7 +6,7 @@ from systemrdl.messages import FileSourceRef
 
 if TYPE_CHECKING:
     import argparse
-    from systemrdl import RDLCompiler, AddrmapNode
+    from systemrdl import RDLCompiler
     from .importer import Importer
 
 
@@ -99,57 +99,63 @@ def parse_defines(rdlc: 'RDLCompiler', define_options: List[str]) -> Dict[str, s
 
 def process_input(rdlc: 'RDLCompiler', importers: 'Sequence[Importer]', input_files: List[str], options: 'argparse.Namespace') -> None:
     defines = parse_defines(rdlc, options.defines)
-
     for file in input_files:
-        if not os.path.exists(file):
-            rdlc.msg.fatal(f"Input file does not exist: {file}")
+        load_file(rdlc, importers, file, defines, options.incdirs, options)
 
-        ext = os.path.splitext(file)[1].strip(".")
-        if ext == "rdl":
-            # Is SystemRDL file
-            rdlc.compile_file(
-                file,
-                incl_search_paths=options.incdirs,
-                defines=defines,
-            )
-        else:
-            # Is foreign input file.
 
-            # Search which importer to use by extension first
-            importer_candidates: List["Importer"] = []
-            for imp in importers:
-                if ext in imp.file_extensions:
-                    importer_candidates.append(imp)
+def load_file(
+        rdlc: 'RDLCompiler',
+        importers: 'Sequence[Importer]',
+        path: str,
+        defines: Dict[str, str],
+        incdirs: List[str],
+        options: 'argparse.Namespace'
+    ) -> None:
+    """
+    Careful! This is a secret API!
+    sphinx-peakrdl calls this.
+    """
 
-            # Do 2nd pass if needed
-            if len(importer_candidates) == 1:
-                importer = importer_candidates[0]
-            elif len(importer_candidates) > 1:
-                # ambiguous which importer to use
-                # Do 2nd pass compatibility check
-                for importer_candidate in importer_candidates:
-                    if importer_candidate.is_compatible(file):
-                        importer = importer_candidate
-                        break
-                else:
-                    importer = None
+    if not os.path.exists(path):
+        rdlc.msg.fatal(f"Input file does not exist: {path}")
+
+    ext = os.path.splitext(path)[1].strip(".")
+    if ext == "rdl":
+        # Is SystemRDL file
+        rdlc.compile_file(
+            path,
+            incl_search_paths=incdirs,
+            defines=defines,
+        )
+    else:
+        # Is foreign input file.
+
+        # Search which importer to use by extension first
+        importer_candidates: List["Importer"] = []
+        for imp in importers:
+            if ext in imp.file_extensions:
+                importer_candidates.append(imp)
+
+        # Do 2nd pass if needed
+        if len(importer_candidates) == 1:
+            importer = importer_candidates[0]
+        elif len(importer_candidates) > 1:
+            # ambiguous which importer to use
+            # Do 2nd pass compatibility check
+            for importer_candidate in importer_candidates:
+                if importer_candidate.is_compatible(path):
+                    importer = importer_candidate
+                    break
             else:
                 importer = None
+        else:
+            importer = None
 
-            if not importer:
-                rdlc.msg.fatal(
-                    "Unknown file type. Could not find any importers capable of reading this file.",
-                    FileSourceRef(file)
-                )
-                raise ValueError
+        if not importer:
+            rdlc.msg.fatal(
+                "Unknown file type. Could not find any importers capable of reading this file.",
+                FileSourceRef(path)
+            )
+            raise ValueError
 
-            importer.do_import(rdlc, options, file)
-
-
-def elaborate(rdlc: 'RDLCompiler', parameters: Dict[str, Any], options: 'argparse.Namespace') -> 'AddrmapNode':
-    root = rdlc.elaborate(
-        top_def_name=options.top_def_name,
-        inst_name=options.inst_name,
-        parameters=parameters
-    )
-    return root.top
+        importer.do_import(rdlc, options, path)

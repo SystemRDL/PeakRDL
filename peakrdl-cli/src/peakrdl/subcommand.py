@@ -148,10 +148,14 @@ class ExporterSubcommand(Subcommand):
 
         process_input.process_input(rdlc, importers, options.input_files, options)
 
-        top = process_input.elaborate(rdlc, parameters, options)
+        root = rdlc.elaborate(
+            top_def_name=options.top_def_name,
+            inst_name=options.inst_name,
+            parameters=parameters
+        )
 
         # Run exporter
-        self.do_export(top, options)
+        self.do_export(root.top, options)
 
 
     def do_export(self, top_node: 'AddrmapNode', options: 'argparse.Namespace') -> None:

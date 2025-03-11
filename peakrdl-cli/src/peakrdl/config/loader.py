@@ -1,4 +1,4 @@
-from typing import Optional, List, Any, Dict
+from typing import Optional, Any, Dict
 import os
 import sys
 
@@ -79,18 +79,11 @@ BOOTSTRAP_SCHEMA = schema.normalize({
     }
 })
 
-def load_cfg(argv: List[str]) -> AppConfig:
-    # lazy-parse argv to see if user provided a config file explicitly
-    path = None
-    argv_iter = iter(argv)
-    for arg in argv_iter:
-        if arg == "--peakrdl-cfg":
-            try:
-                path = next(argv_iter)
-            except StopIteration:
-                print("error: argument --peakrdl-cfg: expected FILE", file=sys.stderr)
-                sys.exit(1)
-            break
+def load_cfg(path: Optional[str]) -> AppConfig:
+    """
+    Careful! This is a secret API!
+    sphinx-peakrdl calls this.
+    """
 
     if path is None:
         # No config file path was provided from the command-line
@@ -102,17 +95,16 @@ def load_cfg(argv: List[str]) -> AppConfig:
         raw_data = {}
         path = ""
     else:
+        # Found file. Parse it
         if not os.path.isfile(path):
-            print(f"error: invalid config file path: {path}", file=sys.stderr)
-            sys.exit(1)
+            raise ValueError(f"error: invalid config file path: {path}")
 
         with open(path, 'r', encoding='utf-8') as f:
             s = f.read()
         try:
             raw_data = tomllib.loads(s)
         except tomllib.TOMLDecodeError as e:
-            print(f"{path}: error: {str(e)}", file=sys.stderr)
-            sys.exit(1)
+            raise ValueError(f"{path}: error: {str(e)}") from e
 
     # Do a first-pass extraction to fetch additional entries to be added to PYTHONPATH
     try:

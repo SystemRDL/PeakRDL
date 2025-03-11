@@ -75,9 +75,6 @@ confidence=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=
-        # Disable for now during development
-        fixme,
-
         # User ignored limits
         too-many-lines,
         too-many-locals,
@@ -88,6 +85,7 @@ disable=
         too-many-statements,
         too-many-instance-attributes,
         too-many-function-args,
+        too-many-positional-arguments,
         line-too-long,
 
         # Noise / Don't care
@@ -98,10 +96,7 @@ disable=
         abstract-method,
         protected-access,
         duplicate-code,
-        cyclic-import,
-
-        # Can't do until py35 support is dropped
-        consider-using-f-string
+        cyclic-import
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
