@@ -199,6 +199,9 @@ There is no need to yell.
 
     MY_FIELD INST;
 
+.. note::
+    If you are transcribing a datasheet or other source material into SystemRDL,
+    and that uses upper-case for register/field names, use the original case unchanged.
 
 
 Parameters and Verilog-style macros are uppercase
@@ -228,3 +231,42 @@ Start and end quotation marks use the same rules as braces.
         It requires multiple lines that are all indented at the same level.
         ";
     } my_field_b;
+
+
+Avoid unnecessary prefixes in names
+-----------------------------------
+
+SystemRDL is a hierarchical language. There is no need to prefix registers with
+the device name, or fields with the register name. Each hierarchy is a distinct
+instance scope, so no need to worry about name collisions.
+
+|:thumbsdown:| No:
+
+.. code:: systemrdl
+
+    addrmap spi_controller {
+        reg {
+            default sw = rw;
+            default hw = r;
+
+            field {} spi_ctrl_enable;
+            field {} spi_ctrl_reset;
+            field {} spi_ctrl_mode;
+        } spi_ctrl;
+    };
+
+
+|:thumbsup:| Yes:
+
+.. code:: systemrdl
+
+    addrmap spi_controller {
+        reg {
+            default sw = rw;
+            default hw = r;
+
+            field {} enable;
+            field {} reset;
+            field {} mode;
+        } ctrl;
+    };
