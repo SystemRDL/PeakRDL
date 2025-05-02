@@ -64,6 +64,10 @@ RTL Generators
         - `Vijayvithal <https://github.com/jahagirdar>`_
         - Generate Bluespec SystemVerilog RTL
 
+    *   - `PeakRDL-regblock-VHDL <https://peakrdl-regblock-vhdl.readthedocs.io>`_
+        - `Dana Sorensen <https://github.com/darsor>`_
+        - VHDL equivalent fork of PeakRDL-regblock
+
     *   - `PeakRDL-sv <https://github.com/NuQuantum/peakrdl-sv>`_
         - `Nu Quantum <https://github.com/NuQuantum>`_
         - Simplified SystemVerilog generator
