@@ -21,7 +21,7 @@ authors = [
 ]
 description = "Toolchain for control/status register automation and code generation."
 readme = "README.md"
-license = {text = "GPLv3"}
+license = {text = "LGPLv3"}
 keywords = [
     "SystemRDL", "PeakRDL", "CSR", "compiler", "tool", "registers", "generator",
     "C", "header", "software", "Verilog", "SystemVerilog", "register abstraction layer",
@@ -33,7 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
 ]
