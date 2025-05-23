@@ -188,16 +188,13 @@ def main() -> None:
     subgroup = parser.add_subparsers(
         title="subcommands",
         metavar="<subcommand>",
+        required=True
     )
     for subcommand in subcommands:
         subcommand._init_subparser(subgroup, importers)
 
     # Process command-line args
     options = parser.parse_args(argv)
-    if not hasattr(options, 'subcommand'):
-        parser.print_usage()
-        print(f"{parser.prog}: error the following arguments are required: <subcommand>")
-        sys.exit(1)
 
     # Run subcommand!
     try:
