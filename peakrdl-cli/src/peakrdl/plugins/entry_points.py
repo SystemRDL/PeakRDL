@@ -40,7 +40,7 @@ elif sys.version_info >= (3,8,0): # pragma: no cover
         return dist.metadata["Name"]
 
 else: # pragma: no cover
-    import pkg_resources # type: ignore
+    import pkg_resources
 
     def _get_entry_points(group_name: str) -> List[Tuple['EntryPoint', Optional['Distribution']]]:
         eps = []
