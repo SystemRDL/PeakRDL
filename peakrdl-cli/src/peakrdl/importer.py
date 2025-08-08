@@ -28,7 +28,7 @@ class Importer:
         self.cfg: Dict[str, Any] = {}
 
     def _load_cfg(self, cfg: AppConfig) -> None:
-        self.cfg = cfg.get_namepsace(self.name, schema.normalize(self.cfg_schema))
+        self.cfg = cfg.get_namespace(self.name, schema.normalize(self.cfg_schema))
 
     def is_compatible(self, path: str) -> bool:
         """
