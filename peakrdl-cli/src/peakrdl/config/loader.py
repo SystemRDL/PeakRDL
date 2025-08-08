@@ -22,9 +22,9 @@ class AppConfig:
                 "exporters": {"*": schema.PythonObjectImport()},
             },
         })
-        self.peakrdl_cfg = self.get_namepsace("peakrdl", sch)
+        self.peakrdl_cfg = self.get_namespace("peakrdl", sch)
 
-    def get_namepsace(self, name: str, sch: schema.Schema) -> Dict[str, Any]:
+    def get_namespace(self, name: str, sch: schema.Schema) -> Dict[str, Any]:
         data = self.raw_data.get(name, {})
         try:
             cfg = sch.extract(data, self.path, name)
