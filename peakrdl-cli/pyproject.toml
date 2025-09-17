@@ -7,7 +7,7 @@ name = "peakrdl-cli"
 dynamic = ["version"]
 requires-python = ">=3.7"
 dependencies = [
-    "systemrdl-compiler >= 1.27.1, < 2",
+    "systemrdl-compiler ~= 1.27",
     "tomli;python_version<'3.11'",
 ]
 
