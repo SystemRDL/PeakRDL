@@ -103,6 +103,8 @@ With default assignments:
 
 .. tip::
 
-    Use default assignments in the most local lexical scope possible.
+    Use default assignments in the most local lexical scope that is appropriate.
     This improves readability, and prevents the assignment from affecting
     something you didn't intend.
+
+    Avoid using default assignments in the root namespace.

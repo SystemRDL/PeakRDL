@@ -208,6 +208,29 @@ Parameters and Verilog-style macros are uppercase
 -------------------------------------------------
 Constants should be in ALL_CAPS
 
+|:thumbsup:|
+
+.. code:: systemrdl
+
+    field my_field #(
+        longint unsigned MY_PARAM = 1,
+        longint unsigned OTHER_PARAM = 2
+    ){
+        // ...
+    };
+
+
+|:thumbsdown:|
+
+.. code:: systemrdl
+
+    field my_field #(
+        longint unsigned my_param = 1,
+        longint unsigned other_param = 2
+    ){
+        // ...
+    };
+
 
 Long descriptions
 -----------------

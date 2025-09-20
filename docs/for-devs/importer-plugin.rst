@@ -62,7 +62,7 @@ Plugin Discovery
 There are two ways PeakRDL can discover your plugin.
 
 Via Entry Point
----------------
+^^^^^^^^^^^^^^^
 
 The PeakRDL command line tool automatically discovers importers by scanning the
 entry points that installed packages advertise.
