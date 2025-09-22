@@ -1,6 +1,6 @@
 addrmap regblock {
-    default sw=rw;
-    default hw=r;
+    default sw = rw;
+    default hw = r;
 
     reg my_reg {
         field {} a[8] = 0x23;

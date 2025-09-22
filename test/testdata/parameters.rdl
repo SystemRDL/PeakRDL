@@ -58,12 +58,12 @@ addrmap amap2 {
 // From issue #12
 addrmap nested {
 
-    reg r1 #(longint unsigned WIDTH=1)  {
-        field {} f[WIDTH], f2[WIDTH+1];
+    reg r1 #(longint unsigned WIDTH = 1)  {
+        field {} f[WIDTH], f2[WIDTH + 1];
     };
 
-    regfile rf1 #(longint unsigned WIDTH=2) {
-        reg r2 #(longint unsigned WIDTH=3)  {
+    regfile rf1 #(longint unsigned WIDTH = 2) {
+        reg r2 #(longint unsigned WIDTH = 3)  {
             field {} f[WIDTH];
         } #(.WIDTH(WIDTH)) r_inst1;
 
@@ -77,11 +77,11 @@ addrmap nested {
 //------------------------------------------------------------------------------
 
 addrmap elab_params #(
-    string STR="default",
-    longint unsigned INT=1,
-    longint unsigned INTARR[]= '{2,3},
-    onwritetype ONWR=woset,
-    boolean BOOL=true
+    string STR = "default",
+    longint unsigned INT = 1,
+    longint unsigned INTARR[]= '{2, 3},
+    onwritetype ONWR = woset,
+    boolean BOOL = true
 ) {
     reg reg_t #(
         longint unsigned WIDTH = 4
