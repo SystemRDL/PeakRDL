@@ -4,20 +4,35 @@ import shlex
 import re
 from typing import List, Optional, Set, Match
 
-def expand_tokens(argv: List[str]) -> List[str]:
+def expand_tokens(argv: List[str], path: str) -> List[str]:
     """
     Expand environment variables in args
     """
-    pattern = re.compile(r"\$(\w+|\{[^}]*\})")
+    token_queries = [
+        ("cwd", r"\$\{\{this_dir\}\}"), # ${{this_dir}}
+        ("env1", r"\$(\w+)"),           # $ENV_VAR
+        ("env2", r"\$\{(\w+)\}"),       # ${ENV_VAR}
+    ]
+    token_regex = re.compile(
+        '|'.join('(?P<%s>%s)' % pair for pair in token_queries)
+    )
+
     def repl(m: Match) -> str:
-        k = m.group(1)
-        if k.startswith("{") and k.endswith("}"):
-            k = k[1:-1]
+        if m.lastgroup in {"env1", "env2"}:
+            assert m.lastindex is not None
+            k = m.group(m.lastindex + 1)
+            v = os.environ.get(k)
+            if v is None:
+                print(f"warning: environment variable '{k}' is not set", file=sys.stderr)
+                v = ""
+            return v
+        elif m.lastgroup == "cwd":
+            this_dir = os.path.normpath(os.path.dirname(path))
+            return this_dir
+        else:
+            raise RuntimeError
 
-        v = os.environ.get(k, m.group(0))
-        return v
-
-    return [pattern.sub(repl, arg) for arg in argv]
+    return [token_regex.sub(repl, arg) for arg in argv]
 
 
 def parse_argfile(path: str) -> List[str]:
@@ -27,7 +42,7 @@ def parse_argfile(path: str) -> List[str]:
 
     with open(path, "r", encoding='utf-8') as f:
         args = shlex.split(f.read(), comments=True)
-        args = expand_tokens(args)
+        args = expand_tokens(args, path)
         return args
 
 

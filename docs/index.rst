@@ -49,6 +49,7 @@ Links
 
     self
     gallery
+    argfiles
     processing-input
     configuring
     licensing

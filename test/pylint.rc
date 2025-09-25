@@ -89,6 +89,7 @@ disable=
         line-too-long,
 
         # Noise / Don't care
+        consider-using-f-string,
         no-else-return,
         unused-variable,
         invalid-name,

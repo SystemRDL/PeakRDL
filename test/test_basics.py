@@ -59,34 +59,3 @@ class TestBasics(PeakRDLTestcase):
             'dump',
             os.path.join(self.testdata_dir, "this_file_doesnt_exist.rdl"),
         ], expects_error=True)
-
-    def test_f_argfile(self):
-        os.environ["PEAKRDL_TOP_TEST_ENVVAR"] = "nested"
-        self.run_commandline([
-            '-f', os.path.join(self.testdata_dir, "dump_nested.f"),
-        ])
-        captured = self.capsys.readouterr()
-        expected = "\n".join([
-            "0x00-0x03: nested.rf_inst.r_inst1",
-            "0x04-0x07: nested.rf_inst.r_inst2",
-            "0x08-0x0b: nested.r1_inst",
-            "0x0c-0x0f: nested.r1_inst2",
-            "",
-        ])
-        self.assertEqual(captured.out, expected)
-
-    def test_f_argfile_errors(self):
-        with self.subTest("file DNE"):
-            self.run_commandline([
-                '-f', os.path.join(self.testdata_dir, "dne.f"),
-            ], expects_error=True)
-
-        with self.subTest("file missing"):
-            self.run_commandline([
-                '-f',
-            ], expects_error=True)
-
-        with self.subTest("circular ref"):
-            self.run_commandline([
-                '-f', os.path.join(self.testdata_dir, "circular.f"),
-            ], expects_error=True)

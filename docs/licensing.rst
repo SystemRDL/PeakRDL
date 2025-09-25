@@ -25,7 +25,7 @@ licensed individually.
 
 
 What is exempt from the LGPL v3 license?
----------------------------------------
+----------------------------------------
 Don't worry. Not everything that the PeakRDL project touches is considered
 LGPL v3 code.
 
