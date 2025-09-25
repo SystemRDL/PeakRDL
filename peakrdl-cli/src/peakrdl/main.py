@@ -1,10 +1,9 @@
 import argparse
 import sys
 import os
-import shlex
 import re
 import inspect
-from typing import List, Dict, Optional, Set, Match, NoReturn
+from typing import List, Dict, Optional, NoReturn
 
 from systemrdl import RDLCompileError
 
@@ -16,6 +15,7 @@ from .cmd.dump import Dump
 from .cmd.list_globals import ListGlobals
 from .cmd.preprocess import Preprocess
 from .subcommand import Subcommand
+from . import argfile
 
 
 DESCRIPTION = """
@@ -52,58 +52,6 @@ class ReportPluginsImpl(argparse.Action):
         sys.exit(0)
 
 
-def get_file_args(path: str) -> List[str]:
-    if not os.path.exists(path):
-        print(f"error: file not found: {path}", file=sys.stderr)
-        sys.exit(1)
-
-    with open(path, "r", encoding='utf-8') as f:
-        return shlex.split(f.read(), comments=True)
-
-
-def expand_file_args(argv: List[str], _pathlist: Optional[Set[str]] = None) -> List[str]:
-    if _pathlist is None:
-        _pathlist = set()
-
-    new_argv = []
-    argv_iter = iter(argv)
-    for arg in argv_iter:
-        if arg == "-f":
-            try:
-                path = next(argv_iter)
-            except StopIteration:
-                print("error: argument -f: expected FILE", file=sys.stderr)
-                sys.exit(1)
-
-            if path in _pathlist:
-                print(f"error: circular reference in -f files: '{path}' was already opened", file=sys.stderr)
-                sys.exit(1)
-            _pathlist.add(path)
-            file_args = get_file_args(path)
-            file_args = expand_file_args(file_args, _pathlist)
-            _pathlist.remove(path)
-            new_argv.extend(file_args)
-        else:
-            new_argv.append(arg)
-    return new_argv
-
-
-def expand_arg_vars(argv: List[str]) -> List[str]:
-    """
-    Expand environment variables in args
-    """
-    pattern = re.compile(r"\$(\w+|\{[^}]*\})")
-    def repl(m: Match) -> str:
-        k = m.group(1)
-        if k.startswith("{") and k.endswith("}"):
-            k = k[1:-1]
-
-        v = os.environ.get(k, m.group(0))
-        return v
-
-    return [pattern.sub(repl, arg) for arg in argv]
-
-
 def get_peakrdl_cfg_arg(argv: List[str]) -> Optional[str]:
     # lazy-parse argv to see if user provided a config file explicitly
     path = None
@@ -121,8 +69,7 @@ def get_peakrdl_cfg_arg(argv: List[str]) -> Optional[str]:
 
 def main() -> None:
     # manually expand any -f argfiles first
-    argv = expand_file_args(sys.argv[1:])
-    argv = expand_arg_vars(argv)
+    argv = argfile.expand_argfile(sys.argv[1:])
 
     peakrdl_cfg_path = get_peakrdl_cfg_arg(argv)
     try:
