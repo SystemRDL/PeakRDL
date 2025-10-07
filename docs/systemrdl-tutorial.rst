@@ -242,6 +242,34 @@ parameterizations.
     my_reg_type #(.SIZE(16), .RESET(16'hABCD)) r3;
 
 
+Enumerated Fields
+-----------------
+In most cases, a field will represent a numeric value in your design. However,
+sometimes it is useful to ascribe names to enumerated values using an RDL ``enum``.
+An enumeration can be bound to a field using the ``encode`` property.
+
+.. code-block:: systemrdl
+
+    // An enum associatyes names with values
+    enum system_state_e {
+        IDLE = 0 {
+            desc = "The system is idle and ready for input";
+        };
+
+        BUSY = 1 {
+            desc = "Busy processing an input";
+        };
+
+        SLEEP = 2; // No properties assigned
+        SHUTDOWN; // Infers value of 3
+    };
+
+    field {
+        encode = system_state_e;
+        reset = system_state_e::IDLE;
+    } system_state[1:0];
+
+
 Some Examples
 -------------
 Here are a few interesting examples of what you can do with SystemRDL.
