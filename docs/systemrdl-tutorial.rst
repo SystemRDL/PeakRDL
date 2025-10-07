@@ -250,7 +250,7 @@ An enumeration can be bound to a field using the ``encode`` property.
 
 .. code-block:: systemrdl
 
-    // An enum associatyes names with values
+    // An enum associates names with values
     enum system_state_e {
         IDLE = 0 {
             desc = "The system is idle and ready for input";
