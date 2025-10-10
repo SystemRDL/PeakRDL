@@ -84,6 +84,10 @@ RTL Generators
         - `lowRISC <https://github.com/lowRISC>`_
         - Generate OpenTitan register block SystemVerilog from SystemRDL files.
 
+    *   - `PeakRDL-etana <https://peakrdl-etana.readthedocs.io>`_
+        - `Dave Keeshan <https://github.com/davekeeshan>`_
+        - Verilog generator without structs, made explictly work with the icarus compiler
+
 
 
 Documentation
