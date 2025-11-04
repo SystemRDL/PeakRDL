@@ -96,6 +96,7 @@ def load_cfg(path: Optional[str]) -> AppConfig:
         path = ""
     else:
         # Found file. Parse it
+        path = os.path.expandvars(path)
         if not os.path.isfile(path):
             raise ValueError(f"error: invalid config file path: {path}")
 
