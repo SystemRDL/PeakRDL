@@ -272,8 +272,8 @@ instance scope, so no need to worry about name collisions.
             default sw = rw;
             default hw = r;
 
-            field {} spi_ctrl_enable;
-            field {} spi_ctrl_reset;
+            field {} spi_ctrl_en;
+            field {} spi_ctrl_rst;
             field {} spi_ctrl_mode;
         } spi_ctrl;
     };
@@ -288,8 +288,8 @@ instance scope, so no need to worry about name collisions.
             default sw = rw;
             default hw = r;
 
-            field {} enable;
-            field {} reset;
+            field {} en;
+            field {} rst;
             field {} mode;
         } ctrl;
     };
