@@ -64,6 +64,9 @@ There are two ways PeakRDL can discover your plugin.
 Via Entry Point
 ^^^^^^^^^^^^^^^
 
+Entry points are the recommended way to advertise PeakRDL plugins, especially if
+you plan to share your plugin more broadly as a pip-installable package.
+
 The PeakRDL command line tool automatically discovers importers by scanning the
 entry points that installed packages advertise.
 See
@@ -96,7 +99,8 @@ Via the PeakRDL configuration file
 
 An alternative method that avoids having to make your own pip-installable
 package is to specify the plugin import entry point via the PeakRDL
-configuration file.
+configuration file. This is useful for smaller ad-hoc plugins or experimental
+extensions.
 
 For example, if your plugin descriptor was defined in a Python file located in
 ``/opt/my_peakrdl_plugins/my_importer.py``, the following configuration would

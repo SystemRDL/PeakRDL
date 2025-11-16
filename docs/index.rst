@@ -80,3 +80,4 @@ Links
     for-devs/importer-plugin
     for-devs/descriptors
     for-devs/cfg_schema
+    for-devs/rdl_gotchas
