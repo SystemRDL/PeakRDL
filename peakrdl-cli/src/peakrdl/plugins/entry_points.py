@@ -46,7 +46,7 @@ else: # pragma: no cover
         eps = []
         for ep in pkg_resources.iter_entry_points(group_name):
             eps.append((ep, ep.dist))
-        return eps
+        return eps # type: ignore
 
     def _get_name_from_dist(dist: 'Distribution') -> str:
         return dist.project_name # type: ignore
