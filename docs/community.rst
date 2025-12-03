@@ -88,6 +88,9 @@ RTL Generators
         - `Dave Keeshan <https://github.com/davekeeshan>`_
         - Verilog generator without structs, made explictly work with the icarus compiler
 
+    *   - `PeakRDL-BusDecoder <https://github.com/arnavsacheti/PeakRDL-BusDecoder>`_
+        - `Arnav Sacheti <https://github.com/arnavsacheti>`_
+        - SystemVerilog Bus Decoder Generator from SystemRDL files.
 
 
 Documentation
