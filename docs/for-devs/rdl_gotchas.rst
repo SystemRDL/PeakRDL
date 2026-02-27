@@ -16,7 +16,7 @@ When reading the checklist below, ask yourself the following questions:
 
 * Does my PeakRDL extension support this scenario? Should it?
 * If not, is it because the scenario is irrelevant to my application? Or is it a limitation in my tool?
-* If it is a limitation, does my extension extension validate and warn the user that it is not supported?
+* If it is a limitation, does my extension validate and warn the user that it is not supported?
 
 To be clear, "limitations" are normal and often necessary. Some of the
 edge-cases described below are borderline preposterous, but do show up in the
