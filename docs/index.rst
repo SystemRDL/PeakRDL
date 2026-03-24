@@ -33,6 +33,14 @@ Install from `PyPi`_ using pip
 .. _PyPi: https://pypi.org/project/peakrdl
 
 
+Get free help!
+--------------
+If you have questions about SystemRDL or PeakRDL, check out the
+`GitHub discussions area <https://github.com/orgs/SystemRDL/discussions>`_.
+Or for more casual discussions, find us on the
+`#PeakRDL:fossi-chat.org <https://matrix.to/#/#PeakRDL:fossi-chat.org>`_
+Matrix chat room hosted by the `FOSSi Foundation <https://fossi-foundation.org>`_.
+
 
 Links
 -----
