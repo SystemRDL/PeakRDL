@@ -108,3 +108,33 @@ With default assignments:
     something you didn't intend.
 
     Avoid using default assignments in the root namespace.
+
+
+Do not define "reserved" fields in registers
+--------------------------------------------
+In SystemRDL, any gaps between fields are implicitly considered reserved space.
+There is no need to explicitly insert reserved fields - doing so is unnecessary
+work and only adds clutter to your design.
+
+|:thumbsdown:| Bad:
+
+.. code:: systemrdl
+
+    reg my_ctrl_reg {
+        field {} RESERVED3[31:16];
+        field {} mode[15:8];
+        field {} RESERVED2[7:5];
+        field {} rst[4:4];
+        field {} RESERVED1[3:1];
+        field {} en[0:0];
+    };
+
+|:thumbsup:| Good:
+
+.. code:: systemrdl
+
+    reg my_ctrl_reg {
+        field {} mode[15:8];
+        field {} rst[4:4];
+        field {} en[0:0];
+    };
