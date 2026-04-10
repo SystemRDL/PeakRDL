@@ -92,6 +92,9 @@ RTL Generators
         - `Arnav Sacheti <https://github.com/arnavsacheti>`_
         - SystemVerilog Bus Decoder Generator from SystemRDL files.
 
+    *   - `PeakRDL-chisel <https://github.com/gonsolo/PeakRDL-chisel>`_
+        - `Andreas Wendleder <https://github.com/gonsolo>`_
+        - Chisel generator.
 
 Documentation
 -------------
