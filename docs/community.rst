@@ -133,3 +133,22 @@ Format Converters
     *   - `PeakRDL-opentitan <https://risto97.github.io/PeakRDL-opentitan/>`_
         - `Risto Pejašinović <https://github.com/Risto97>`_
         - Convert to and from OpenTitan hjson format
+
+
+Editor Integrations
+-------------------
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Tool
+        - Author
+        - Summary
+
+    *   - `systemrdl-pro <https://github.com/seimei-d/systemrdl-pro>`_
+        - `seimei-d <https://github.com/seimei-d>`_
+        - VS Code extension and standalone LSP server for SystemRDL 2.0.
+          Provides diagnostics, hover, goto-definition, references, CodeLens,
+          inlay hints, and an interactive memory-map viewer. Built on
+          systemrdl-compiler. Editor-agnostic LSP so other editors can adopt it.
+          Also published on `Open VSX <https://open-vsx.org/extension/seimei-d/systemrdl-pro>`_.
