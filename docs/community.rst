@@ -25,6 +25,11 @@ Test/Software Abstraction Layers
         - Generate a register abstraction layer for supported BEAM languages
           (Erlang and Elixir) from a SystemRDL definition.
 
+    *   - `PeakRDL-check <https://github.com/chrismcdev/PeakRDL-check>`_
+        - `Christopher McDonald <https://github.com/chrismcdev>`_
+        - Detect firmware-breaking register changes and review large SystemRDL
+          register maps.
+
     *   - `PeakRDL-cocotb-ralgen <https://dyumnin.github.io/cocotb-ralgen>`_
         - `Dyumnin Semiconductor <https://github.com/dyumnin>`_
         - A SystemRDL to raltest converter for cocotb
