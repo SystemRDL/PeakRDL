@@ -7,6 +7,11 @@ comes across it. Since all style guides are inherently opinionated, it is
 important not to take them too seriously. It is ok to break from the style
 guide if it will improve readability and consistency.
 
+.. tip::
+    The whitespace and layout rules below can be applied automatically with
+    `rdlfmt <https://fischeti.github.io/rdlfmt/>`_, a formatter for
+    SystemRDL that follows this style guide.
+
 
 
 Indentation is 4 spaces per level
