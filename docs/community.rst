@@ -140,6 +140,23 @@ Format Converters
         - Convert to and from OpenTitan hjson format
 
 
+Linters & Formatters
+--------------------
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Tool
+        - Author
+        - Summary
+
+    *   - `rdlfmt <https://fischeti.github.io/rdlfmt/>`_
+        - `Tim Fischer <https://github.com/fischeti>`_
+        - Formatter for SystemRDL that follows the
+          :doc:`SystemRDL style guide <style-guide>`. Available as a
+          standalone binary or as a ``peakrdl fmt`` subcommand.
+
+
 Editor Integrations
 -------------------
 
