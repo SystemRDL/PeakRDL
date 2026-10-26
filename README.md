@@ -25,4 +25,4 @@ This tool can:
 
 
 ## Documentation
-See the [PeakRDL Documentation](http://peakrdl.readthedocs.io) for more details.
+See the [PeakRDL Documentation](https://peakrdl.readthedocs.io) for more details.
