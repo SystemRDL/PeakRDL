@@ -40,3 +40,13 @@ class TestArgfile(PeakRDLTestcase):
         self.run_commandline([
             '-f', os.path.join(self.testdata_dir, "circular.f"),
         ], expects_error=True)
+
+    def test_err_unset_env(self):
+        os.environ.pop("PEAKRDL_TEST_UNSET", None)
+        self.run_commandline([
+            '-f', os.path.join(self.testdata_dir, "unset_env.f"),
+        ], expects_error=True)
+
+        captured = self.capsys.readouterr()
+        self.assertIn("PEAKRDL_TEST_UNSET", captured.err)
+        self.assertIn("unset_env.f", captured.err)
