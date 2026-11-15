@@ -4,6 +4,11 @@ import shlex
 import re
 from typing import List, Optional, Set, Match
 
+class ArgfileError(Exception):
+    """
+    Raised when an argfile cannot be expanded
+    """
+
 def expand_tokens(argv: List[str], path: str) -> List[str]:
     """
     Expand environment variables in args
@@ -23,8 +28,9 @@ def expand_tokens(argv: List[str], path: str) -> List[str]:
             k = m.group(m.lastindex + 1)
             v = os.environ.get(k)
             if v is None:
-                print(f"warning: environment variable '{k}' is not set", file=sys.stderr)
-                v = ""
+                # An empty substitution silently changes the arguments, so treat
+                # it as an error instead of a warning
+                raise ArgfileError(f"environment variable '{k}' is not set in {path}")
             return v
         elif m.lastgroup == "cwd":
             this_dir = os.path.normpath(os.path.dirname(path))
@@ -42,8 +48,14 @@ def parse_argfile(path: str) -> List[str]:
 
     with open(path, "r", encoding='utf-8') as f:
         args = shlex.split(f.read(), comments=True)
+
+    try:
         args = expand_tokens(args, path)
-        return args
+    except ArgfileError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    return args
 
 
 def expand_argfile(argv: List[str], _pathlist: Optional[Set[str]] = None) -> List[str]:
